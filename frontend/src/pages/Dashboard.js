@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { QRCodeCanvas } from 'qrcode.react';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1';
-const KIOSK_URL = `${window.location.origin}/kiosk`;
 
 const card = (style = {}) => ({
   background: 'white', border: '1px solid #e3e1e9', borderRadius: 2, padding: 24, ...style
@@ -24,11 +22,10 @@ export default function Dashboard() {
 
   if (loading) return <div style={{ color: '#757682', fontFamily: 'Newsreader, serif', fontSize: 18 }}>Loading dashboard...</div>;
 
-  const occ = data?.occupancy || {};
-  const dues = data?.dues || {};
+  const occ      = data?.occupancy || {};
+  const dues     = data?.dues || {};
   const students = data?.students || {};
   const checkins = data?.recent_checkins || [];
-  const slots = data?.slot_stats || [];
 
   const occPct = occ.percentage || 0;
   const radius = 58;

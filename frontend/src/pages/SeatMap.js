@@ -15,7 +15,6 @@ export default function SeatMap() {
   const [slots, setSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState('');
   const [selectedSeat, setSelectedSeat] = useState(null);
-  const [tooltip, setTooltip] = useState(null);
   const [loading, setLoading] = useState(true);
   const [assignModal, setAssignModal] = useState(false);
   const [students, setStudents] = useState([]);

@@ -69,7 +69,8 @@ export default function EditStudent() {
         <img src="${img}" class="qr" width="160" height="160" />
         <div class="id">ID: ${student.qr_code}</div>
       </div>
-      <script>window.onload = () => { window.print(); }<\/script>
+      // eslint-disable-next-line no-useless-concat
+      <script>window.onload = () => { window.print(); }</` + `</script>
       </body></html>
     `);
     win.document.close();

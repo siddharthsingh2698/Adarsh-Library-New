@@ -63,7 +63,8 @@ export default function LibraryPage() {
         <img src="${img}" width="220" height="220"/>
         <div class="url">${KIOSK_URL}</div>
       </div>
-      <script>window.onload=()=>window.print()<\/script>
+      // eslint-disable-next-line no-useless-concat
+      <script>window.onload=()=>window.print()</` + `</script>
       </body></html>
     `);
     win.document.close();
