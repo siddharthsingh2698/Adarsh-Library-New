@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#eeedf4",
+                        "secondary": "#2b6954",
+                        "tertiary-fixed": "#ffdbcb",
+                        "on-background": "#1a1b21",
+                        "on-secondary-fixed": "#002117",
+                        "on-tertiary-container": "#f39461",
+                        "primary-fixed": "#dce1ff",
+                        "surface-bright": "#faf8ff",
+                        "tertiary-fixed-dim": "#ffb691",
+                        "tertiary-container": "#6e2c00",
+                        "on-secondary-fixed-variant": "#0b513d",
+                        "on-primary-container": "#90a8ff",
+                        "secondary-fixed-dim": "#95d3ba",
+                        "surface-container-highest": "#e3e1e9",
+                        "surface-variant": "#e3e1e9",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f1f0f7",
+                        "on-primary": "#ffffff",
+                        "background": "#faf8ff",
+                        "on-primary-fixed-variant": "#264191",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#b6c4ff",
+                        "surface-dim": "#dad9e1",
+                        "secondary-container": "#adedd3",
+                        "surface-container-low": "#f4f3fa",
+                        "on-primary-fixed": "#00164e",
+                        "primary-fixed-dim": "#b6c4ff",
+                        "secondary-fixed": "#b0f0d6",
+                        "error": "#ba1a1a",
+                        "primary": "#00236f",
+                        "tertiary": "#4b1c00",
+                        "primary-container": "#1e3a8a",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#444651",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#faf8ff",
+                        "on-secondary-container": "#306d58",
+                        "surface-container-high": "#e9e7ef",
+                        "inverse-surface": "#2f3036",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#341100",
+                        "on-tertiary-fixed-variant": "#773205",
+                        "outline": "#757682",
+                        "outline-variant": "#c5c5d3",
+                        "on-surface": "#1a1b21",
+                        "surface-tint": "#4059aa"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "density-comfortable": "16px",
+                        "gutter": "16px",
+                        "density-compact": "8px",
+                        "container-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "table-header": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h1": ["Newsreader"],
+                        "label": ["Inter"],
+                        "h2": ["Newsreader"],
+                        "data-mono": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "h3": ["Newsreader"],
+                        "newsreader": ["Newsreader"]
+                    },
+                    "fontSize": {
+                        "table-header": ["13px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label": ["12px", {"lineHeight": "1", "fontWeight": "500"}],
+                        "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+            gap: 8px;
+        }
+        .seat-box {
+            aspect-ratio: 1 / 1;
+            width: 32px;
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body class="bg-surface-container-low font-body-md text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full flex flex-col py-6 bg-slate-100 dark:bg-slate-950 h-screen w-64 border-r border-slate-200 dark:border-slate-800 font-newsreader text-sm font-medium tonal layer shift with 1px border">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+</div>
+<div>
+<h1 class="text-lg font-black text-blue-900 dark:text-blue-400 uppercase tracking-tight">Adarsh Library</h1>
+<p class="text-[10px] text-slate-500 font-sans uppercase tracking-widest">Institutional Archive</p>
+</div>
+</div>
+</div>
+<nav class="flex-grow space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 hover:text-blue-900 dark:hover:text-blue-300 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-blue-900 dark:text-blue-300 bg-white dark:bg-slate-900 border-l-4 border-blue-900 dark:border-blue-500 font-bold" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+                Seat Map
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 hover:text-blue-900 dark:hover:text-blue-300 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                Student Directory
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 hover:text-blue-900 dark:hover:text-blue-300 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+                Fee Ledger
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 hover:text-blue-900 dark:hover:text-blue-300 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Configuration
+            </a>
+</nav>
+<div class="px-4 mt-auto space-y-1 border-t border-slate-200 pt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+                Support
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-64 min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center h-16 px-6 w-full font-newsreader antialiased">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-50 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary-container font-newsreader italic" placeholder="Search titles, authors, or ISBN..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-slate-200">
+<img alt="Administrator Profile" data-alt="A professional headshot of a senior librarian or administrator in a corporate setting. The lighting is bright and even, conveying authority and friendliness. The background is a blurred library archive with high-quality dark wood finishes. The overall mood is academic, professional, and trustworthy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAF-mNBReDPXtj68o1fmqvGeQI4UMjygUvEkWR8TNPSTNIVY90Y9bRvJGjXmqGm2TNl684wfGNiJl8iH8kOZhjupRVvBYypLkpH_KmTdkFS8-5GjfokBFNpXzn1jHk1MdgOcbxlxi4My2lKJg__6i46c9UqXelqt5SveLREhhPKmajpuBkG4ZisbjVIEPUZ63yjPlaC3ponh4GAY4Pe_gbsGB7iXEHfNn-Swnx_nZMDWX2on5VODIIuvWbvwOprXXCtLqdM3TiMyVU"/>
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="p-container-padding">
+<!-- Breadcrumbs & Title -->
+<div class="mb-8 flex justify-between items-end">
+<div>
+<nav class="flex text-xs font-label text-outline mb-2">
+<span class="hover:text-primary cursor-pointer">Archive</span>
+<span class="mx-2 text-outline-variant">/</span>
+<span class="text-primary font-bold">Floor Plan</span>
+</nav>
+<h2 class="font-h2 text-h2 text-primary">Library Seat Management</h2>
+<p class="font-body-sm text-on-surface-variant max-w-2xl mt-1">Real-time visualization of the East Wing Reading Hall. Manage student assignments and track occupancy rates across morning, afternoon, and evening slots.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 border border-primary text-primary font-label rounded-lg hover:bg-primary-fixed transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span>
+                        Export Map
+                    </button>
+<button class="px-4 py-2 bg-primary text-on-primary font-label rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                        Bulk Assign
+                    </button>
+</div>
+</div>
+<!-- Filters & Legend -->
+<div class="bg-white border border-slate-200 rounded-lg p-density-comfortable mb-8 grid grid-cols-12 gap-gutter items-center">
+<div class="col-span-4 border-r border-slate-100 pr-gutter">
+<label class="block font-label text-on-surface-variant mb-2 uppercase tracking-tighter">Time Slot Selection</label>
+<div class="flex gap-2">
+<button class="flex-1 py-2 text-center rounded bg-primary-container text-on-primary-container font-label text-[11px]">MORNING</button>
+<button class="flex-1 py-2 text-center rounded bg-surface-container-low text-on-surface-variant font-label text-[11px] hover:bg-slate-100">AFTERNOON</button>
+<button class="flex-1 py-2 text-center rounded bg-surface-container-low text-on-surface-variant font-label text-[11px] hover:bg-slate-100">EVENING</button>
+</div>
+</div>
+<div class="col-span-8 flex justify-between items-center pl-gutter">
+<div class="flex gap-6">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
+<span class="font-label text-on-surface-variant">Available</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-error"></span>
+<span class="font-label text-on-surface-variant">Occupied</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-on-tertiary-container"></span>
+<span class="font-label text-on-surface-variant">Reserved</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-outline-variant"></span>
+<span class="font-label text-on-surface-variant">Maintenance</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-primary font-label bg-primary-fixed px-3 py-1.5 rounded-full">
+<span class="material-symbols-outlined text-[18px]" data-icon="analytics">analytics</span>
+                        Occupancy: 64%
+                    </div>
+</div>
+</div>
+<!-- Bento Layout for Map & Stats -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Interactive Seat Map -->
+<div class="col-span-9 bg-white border border-slate-200 rounded-lg overflow-hidden flex flex-col">
+<div class="bg-slate-50 border-b border-slate-200 px-6 py-3 flex justify-between items-center">
+<h3 class="font-h3 text-body-md font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+                            East Wing - Floor 02
+                        </h3>
+<div class="flex gap-2">
+<button class="p-1.5 hover:bg-slate-200 rounded text-slate-500"><span class="material-symbols-outlined text-sm" data-icon="zoom_in">zoom_in</span></button>
+<button class="p-1.5 hover:bg-slate-200 rounded text-slate-500"><span class="material-symbols-outlined text-sm" data-icon="zoom_out">zoom_out</span></button>
+</div>
+</div>
+<div class="p-8 bg-[#fdfdfd] relative min-h-[600px] flex items-center justify-center">
+<div class="grid grid-cols-15 gap-4">
+<!-- Seat Grid Iteration -->
+<!-- Rows and columns representing library tables -->
+<div class="grid grid-cols-6 gap-3 p-4 border-2 border-dashed border-slate-100 rounded-xl relative">
+<span class="absolute -top-6 left-0 text-[10px] font-bold text-slate-300 uppercase">Table Zone A</span>
+<div class="seat-box rounded-sm bg-secondary cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">A1</div>
+<div class="seat-box rounded-sm bg-error cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">A2</div>
+<div class="seat-box rounded-sm bg-secondary cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">A3</div>
+<div class="seat-box rounded-sm bg-secondary cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">A4</div>
+<div class="seat-box rounded-sm bg-secondary cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">A5</div>
+<div class="seat-box rounded-sm bg-on-tertiary-container cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">A6</div>
+<div class="seat-box rounded-sm bg-secondary cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">A7</div>
+<div class="seat-box rounded-sm bg-secondary cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">A8</div>
+<div class="seat-box rounded-sm bg-error cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">A9</div>
+<div class="seat-box rounded-sm bg-secondary cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">A10</div>
+<div class="seat-box rounded-sm bg-outline-variant cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">A11</div>
+<div class="seat-box rounded-sm bg-secondary cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">A12</div>
+</div>
+<div class="w-16 h-full flex items-center justify-center">
+<div class="h-full w-4 bg-slate-50 border-x border-slate-100 flex items-center justify-center">
+<span class="rotate-90 text-[10px] text-slate-300 font-bold tracking-[0.5em] uppercase whitespace-nowrap">Main Aisle</span>
+</div>
+</div>
+<div class="grid grid-cols-6 gap-3 p-4 border-2 border-dashed border-slate-100 rounded-xl relative">
+<span class="absolute -top-6 left-0 text-[10px] font-bold text-slate-300 uppercase">Table Zone B</span>
+<div class="seat-box rounded-sm bg-error cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">B1</div>
+<div class="seat-box rounded-sm bg-error cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">B2</div>
+<div class="seat-box rounded-sm bg-secondary cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">B3</div>
+<div class="seat-box rounded-sm bg-error cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">B4</div>
+<div class="seat-box rounded-sm bg-secondary cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">B5</div>
+<div class="seat-box rounded-sm bg-secondary cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">B6</div>
+<div class="seat-box rounded-sm bg-error cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">B7</div>
+<div class="seat-box rounded-sm bg-error cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">B8</div>
+<div class="seat-box rounded-sm bg-error cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">B9</div>
+<div class="seat-box rounded-sm bg-error cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">B10</div>
+<div class="seat-box rounded-sm bg-error cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">B11</div>
+<div class="seat-box rounded-sm bg-error cursor-pointer hover:ring-2 ring-primary hover:scale-110 active:opacity-70 flex items-center justify-center text-[10px] text-white font-bold">B12</div>
+</div>
+</div>
+<!-- Tooltip Overlay (Visible on Hover Concept) -->
+<div class="absolute top-1/3 left-1/4 translate-x-4 bg-white shadow-xl border border-slate-200 rounded-lg p-4 w-64 z-50 pointer-events-none">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h4 class="font-bold text-primary">Seat A2 - Occupied</h4>
+<p class="text-[10px] text-on-surface-variant font-label">Student: Rahul Sharma (ID: #4492)</p>
+</div>
+<span class="material-symbols-outlined text-error" data-icon="person">person</span>
+</div>
+<div class="space-y-2 border-t border-slate-100 pt-3">
+<button class="w-full py-1.5 bg-slate-50 text-primary font-label text-[11px] rounded hover:bg-primary-fixed border border-slate-200">View Details</button>
+<button class="w-full py-1.5 bg-slate-50 text-error font-label text-[11px] rounded hover:bg-error-container border border-slate-200">Release Seat</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar Details -->
+<div class="col-span-3 space-y-gutter">
+<!-- Quick Actions Card -->
+<div class="bg-white border border-slate-200 rounded-lg p-6">
+<h4 class="font-h3 text-body-md font-bold mb-4">Quick Insights</h4>
+<div class="space-y-4">
+<div class="flex justify-between items-center pb-3 border-b border-slate-50">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="event_available">event_available</span>
+</div>
+<span class="font-label text-on-surface-variant">Free Now</span>
+</div>
+<span class="font-bold text-primary">28</span>
+</div>
+<div class="flex justify-between items-center pb-3 border-b border-slate-50">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+</div>
+<span class="font-label text-on-surface-variant">Overdue</span>
+</div>
+<span class="font-bold text-primary">04</span>
+</div>
+<div class="flex justify-between items-center pb-3 border-b border-slate-50">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant" data-icon="history">history</span>
+</div>
+<span class="font-label text-on-surface-variant">Maintenance</span>
+</div>
+<span class="font-bold text-primary">02</span>
+</div>
+</div>
+<button class="w-full mt-6 py-3 bg-surface-container-high text-primary font-bold rounded-lg hover:bg-slate-200 transition-colors flex items-center justify-center gap-2 text-sm">
+<span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
+                            Attendance Report
+                        </button>
+</div>
+<!-- Selected Seat Details -->
+<div class="bg-primary text-white rounded-lg p-6 shadow-lg shadow-blue-900/20">
+<div class="flex justify-between items-start mb-6">
+<div>
+<p class="text-[10px] opacity-70 uppercase tracking-widest font-bold">Selected Element</p>
+<h4 class="font-newsreader text-2xl font-bold">Seat A3</h4>
+</div>
+<div class="p-2 bg-white/10 rounded-full">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+</div>
+</div>
+<div class="space-y-4 mb-6">
+<div class="flex justify-between text-sm opacity-90">
+<span>Status:</span>
+<span class="font-bold">Available</span>
+</div>
+<div class="flex justify-between text-sm opacity-90">
+<span>Power Outlet:</span>
+<span class="font-bold">Yes</span>
+</div>
+<div class="flex justify-between text-sm opacity-90">
+<span>Wing:</span>
+<span class="font-bold">East (Reading)</span>
+</div>
+</div>
+<button class="w-full py-3 bg-white text-primary font-bold rounded-lg hover:bg-slate-50 transition-colors">
+                            Assign Student
+                        </button>
+</div>
+<!-- Image Prompt Box -->
+<div class="rounded-lg overflow-hidden border border-slate-200">
+<img class="w-full h-48 object-cover" data-alt="A high-angle architectural photograph of a modern university library interior. The scene features rows of minimalist wooden tables with integrated warm desk lamps and sleek ergonomic chairs. The floor is a polished slate grey. Large industrial-style windows let in soft morning light, creating a calm and studious atmosphere. The visual aesthetic is orderly, scholarly, and clean, matching a high-end corporate archive." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2rzfElIPAIadjkDbutEclCHTKdukFhdmdSyJRBMJEqigOQUxc2ch8tGug349OFPt1j0Ah5f2WJf0bEDuUXWGWwy_T48RgSwpMjloikXyLV45rw9kp_1aeFXJ59Zwy_kqXImv5wUCW7j7j83XohAbBh3ANcXzmxr3InY0dEj8tgGNMSoQgxCDogy5VtjOimtRX3HtycOAhskIicNz8TV807uucRAj1iWPE3HW2Zwx5_50FkvA2_GA_HM_F-6-oQKqx3uQa7I7T_8U3"/>
+<div class="p-4 bg-white">
+<p class="font-body-sm italic text-on-surface-variant">"Order is the foundation of all great things." — Edmund Burke</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB Concept (Contextual Suppression Handled) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform active:opacity-80">
+<span class="material-symbols-outlined" data-icon="print">print</span>
+</button>
+</body></html>

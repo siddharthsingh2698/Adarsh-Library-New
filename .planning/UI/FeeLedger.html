@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#eeedf4",
+                    "secondary": "#2b6954",
+                    "tertiary-fixed": "#ffdbcb",
+                    "on-background": "#1a1b21",
+                    "on-secondary-fixed": "#002117",
+                    "on-tertiary-container": "#f39461",
+                    "primary-fixed": "#dce1ff",
+                    "surface-bright": "#faf8ff",
+                    "tertiary-fixed-dim": "#ffb691",
+                    "tertiary-container": "#6e2c00",
+                    "on-secondary-fixed-variant": "#0b513d",
+                    "on-primary-container": "#90a8ff",
+                    "secondary-fixed-dim": "#95d3ba",
+                    "surface-container-highest": "#e3e1e9",
+                    "surface-variant": "#e3e1e9",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#f1f0f7",
+                    "on-primary": "#ffffff",
+                    "background": "#faf8ff",
+                    "on-primary-fixed-variant": "#264191",
+                    "error-container": "#ffdad6",
+                    "inverse-primary": "#b6c4ff",
+                    "surface-dim": "#dad9e1",
+                    "secondary-container": "#adedd3",
+                    "surface-container-low": "#f4f3fa",
+                    "on-primary-fixed": "#00164e",
+                    "primary-fixed-dim": "#b6c4ff",
+                    "secondary-fixed": "#b0f0d6",
+                    "error": "#ba1a1a",
+                    "primary": "#00236f",
+                    "tertiary": "#4b1c00",
+                    "primary-container": "#1e3a8a",
+                    "on-error-container": "#93000a",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#444651",
+                    "on-tertiary": "#ffffff",
+                    "surface": "#faf8ff",
+                    "on-secondary-container": "#306d58",
+                    "surface-container-high": "#e9e7ef",
+                    "inverse-surface": "#2f3036",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#341100",
+                    "on-tertiary-fixed-variant": "#773205",
+                    "outline": "#757682",
+                    "outline-variant": "#c5c5d3",
+                    "on-surface": "#1a1b21",
+                    "surface-tint": "#4059aa"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "density-comfortable": "16px",
+                    "gutter": "16px",
+                    "density-compact": "8px",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "table-header": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "h1": ["Newsreader"],
+                    "label": ["Inter"],
+                    "h2": ["Newsreader"],
+                    "data-mono": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "h3": ["Newsreader"]
+            },
+            "fontSize": {
+                    "table-header": ["13px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label": ["12px", {"lineHeight": "1", "fontWeight": "500"}],
+                    "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "data-mono": ["14px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #faf8ff;
+            color: #1a1b21;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #eeedf4;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c5c5d3;
+        }
+    </style>
+</head>
+<body class="font-body-md bg-surface antialiased">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full flex flex-col py-6 bg-slate-100 dark:bg-slate-950 h-screen w-64 border-r border-slate-200 dark:border-slate-800 z-50">
+<div class="px-6 mb-8">
+<h1 class="text-lg font-black text-blue-900 dark:text-blue-400 uppercase tracking-tight font-newsreader">Adarsh Library</h1>
+<p class="text-[10px] text-slate-500 font-medium uppercase tracking-widest mt-1">Institutional Archive</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 font-newsreader text-sm font-medium transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 font-newsreader text-sm font-medium transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span>Seat Map</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 font-newsreader text-sm font-medium transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Student Directory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-blue-900 dark:text-blue-300 bg-white dark:bg-slate-900 border-l-4 border-blue-900 dark:border-blue-500 font-bold font-newsreader text-sm font-medium transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Fee Ledger</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 font-newsreader text-sm font-medium transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Configuration</span>
+</a>
+</nav>
+<div class="mt-auto px-2 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 font-newsreader text-sm font-medium transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 font-newsreader text-sm font-medium transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center h-16 px-8 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" data-icon="search">search</span>
+<input class="w-full bg-slate-50 border-slate-200 rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary focus:border-primary font-newsreader italic" placeholder="Search transactions, students, or receipt IDs..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-slate-500 hover:text-blue-900 transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-slate-500 hover:text-blue-900 transition-colors">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-slate-200">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a library administrator in a clean-cut corporate style. The man has a focused, reliable expression and wears a charcoal grey blazer over a crisp white shirt. The background is a softly blurred modern office interior with warm wooden accents and cool slate-grey tones, maintaining a high-key academic and authoritative atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjiNpJrS3R_C7NlaamDvw39UaqTy-Bw9_pZpEI0WgWSaI5bMdh14U0r3P6NhgGi2sqTdp1dxUdDWZcyxWAu6J0oBhTlEluLHFqZzwQoDrSMbidXqe4nD1X3ei3DMphQK4AIfxV4mEWeRsJzZ6bl5Xk6EoH2_W7i3dq8r_bQOjmpIiyv3joLSjI5M0Vn60q5iW053S443lJtJX1n6lYdDxXISFx3h3jJoqe-1A9Y91JH0ESMk_QtL6rPpPhtzk8IehIxmO_mnIP9e8C"/>
+</div>
+</div>
+</header>
+<div class="p-8 max-w-[1400px] mx-auto w-full space-y-8">
+<!-- Page Header -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-h2 text-h2 text-primary">Financial Ledger</h2>
+<p class="text-slate-500 font-body-sm mt-1">Institutional revenue monitoring and fee collections for October 2023.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-blue-900 text-blue-900 font-label text-label rounded-lg hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span>
+                        Export Report
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary font-label text-label rounded-lg hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                        New Transaction
+                    </button>
+</div>
+</div>
+<!-- Dashboard Overview Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white p-6 border border-slate-200 rounded-lg space-y-4">
+<div class="flex justify-between items-start">
+<span class="p-2 bg-secondary-container text-on-secondary-container rounded-lg">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+</span>
+<span class="text-xs font-bold text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+                            +12.4%
+                        </span>
+</div>
+<div>
+<p class="text-slate-500 font-label uppercase tracking-wider text-[11px]">Total Collected</p>
+<h3 class="text-h1 font-h1 text-primary mt-1">₹4,82,450</h3>
+</div>
+<div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
+<div class="bg-secondary h-full" style="width: 78%"></div>
+</div>
+<p class="text-[11px] text-slate-400">78% of projected monthly goal reached.</p>
+</div>
+<div class="bg-white p-6 border border-slate-200 rounded-lg space-y-4">
+<div class="flex justify-between items-start">
+<span class="p-2 bg-error-container text-on-error-container rounded-lg">
+<span class="material-symbols-outlined" data-icon="pending_actions">pending_actions</span>
+</span>
+<span class="text-xs font-bold text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="info">info</span>
+                            Critical
+                        </span>
+</div>
+<div>
+<p class="text-slate-500 font-label uppercase tracking-wider text-[11px]">Pending Amount</p>
+<h3 class="text-h1 font-h1 text-error mt-1">₹1,12,000</h3>
+</div>
+<div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
+<div class="bg-error h-full" style="width: 22%"></div>
+</div>
+<p class="text-[11px] text-slate-400">Includes 12 accounts with overdue periods &gt; 15 days.</p>
+</div>
+<div class="bg-white p-6 border border-slate-200 rounded-lg space-y-4">
+<div class="flex justify-between items-start">
+<span class="p-2 bg-primary-fixed text-on-primary-fixed-variant rounded-lg">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+</span>
+</div>
+<div>
+<p class="text-slate-500 font-label uppercase tracking-wider text-[11px]">Active Subscriptions</p>
+<h3 class="text-h1 font-h1 text-primary mt-1">324</h3>
+</div>
+<div class="flex items-center gap-2 pt-2">
+<div class="flex -space-x-2">
+<img alt="Student" class="w-6 h-6 rounded-full border-2 border-white object-cover" data-alt="A student profile photo featuring a young adult male with glasses and a friendly, scholarly expression. The lighting is bright and professional, set against a clean library bookshelf backdrop with soft-focus books in muted academic colors like deep blues and browns." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtcE_0Mmet6cVeipY4MTBrcrfhGGYBw7dO5Zg3Jsxn2QTP-oDLENauUJXyrOwmRK_68fUMIam-oq5FOnG2RBEwvDXt_oVEXFha4-nfZcZq8r3ltaKikyayvh2s8sIvRYedUyBQsKwchpZI-v7oXYNCqQdfYfX7_ge8UXauj7l0XeOs8mZ3E6-txaDFk871vEB4ERXmQNmqmCYAcLbwNLW2pa9MMVY9FQCdMCOlDG0eBsIsDxA2opWsMZJg4Sw2Bhx2n0A7P2564bRY"/>
+<img alt="Student" class="w-6 h-6 rounded-full border-2 border-white object-cover" data-alt="A professional portrait of a young woman with long dark hair, wearing a navy blue blazer. She is smiling confidently. The background is a minimalist studio setting with soft grey tones and clean lines, embodying a modern academic environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYBmMbpFRge5-L8itojSZWRmXELCkIMqpVmhNknv3Pu7EVK7186DNuoIS5nNgSerLsx57kqdGRZfkPQ4ce89bIrFtk5Wv2olCkyu93DQnAj3jx9rtk_e-h5ns7WBdEcOAeI4ck6qajECVeSmvBgIO3Qj3VJS_EO2BNNF1HksNzdOCY0aZouv0rfij5_G9rvt6XyesyzOmzrkFHlS8NoNVWDkC9A525_j18UR7t7LeuchBRAdYSro6q9i78zZHueWwB3oFFH5GlWKZS"/>
+<img alt="Student" class="w-6 h-6 rounded-full border-2 border-white object-cover" data-alt="A close-up photograph of a young man with a modern haircut, looking directly into the camera with a neutral, professional expression. He is wearing a light blue polo shirt. The scene is brightly lit with a clean, high-key aesthetic that fits a sophisticated institutional design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqOYZDd1I6x_bO-bbvtVJ9qOSt6I4ruo5EqIhryPsC1WUEhwr1AuCJl4PNw1CpP3rSnNRPcJ7ibMKrXh90bTeJbuunDqxulMixI7hgGA5kJUZt3Ab-yvH5oGc-9-qJyKW2QjXhEElMX6TxMaSU9dG3ZRkTQ_y3CgkS2Xz1ccX6T35hmZzW1620W2w0hRygNnZ_lQ4AEacr-qpThIZhyonbVdtzHteiRWrSv6ISULiemBNznS1EwYsiDZTY3FtZJu_PLJdo7Jc7BWZM"/>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600">+12</div>
+</div>
+<span class="text-[11px] text-slate-500">New joiners this week</span>
+</div>
+</div>
+</div>
+<!-- Ledger and Outstanding Tabs -->
+<div class="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
+<div class="flex border-b border-slate-200 px-6">
+<button class="px-6 py-4 border-b-2 border-blue-900 text-blue-900 font-bold text-sm">Recent Transactions</button>
+<button class="px-6 py-4 text-slate-500 hover:text-blue-900 font-medium text-sm transition-colors">Outstanding Dues</button>
+<button class="px-6 py-4 text-slate-500 hover:text-blue-900 font-medium text-sm transition-colors">Refund History</button>
+</div>
+<!-- Filters & Search -->
+<div class="p-4 bg-slate-50 flex items-center justify-between border-b border-slate-200">
+<div class="flex gap-4">
+<select class="bg-white border-slate-200 rounded text-xs font-label text-slate-600 focus:ring-primary h-9">
+<option>October 2023</option>
+<option>September 2023</option>
+<option>August 2023</option>
+</select>
+<select class="bg-white border-slate-200 rounded text-xs font-label text-slate-600 focus:ring-primary h-9">
+<option>Payment Mode: All</option>
+<option>UPI</option>
+<option>Cash</option>
+<option>Bank Transfer</option>
+</select>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[11px] text-slate-400 uppercase font-bold">Sort by:</span>
+<select class="bg-white border-slate-200 rounded text-xs font-label text-slate-600 focus:ring-primary h-9">
+<option>Newest First</option>
+<option>Amount: High to Low</option>
+</select>
+</div>
+</div>
+<!-- Ledger Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 border-b border-slate-200">
+<th class="px-6 py-3 font-table-header text-table-header text-slate-600">Student Name</th>
+<th class="px-6 py-3 font-table-header text-table-header text-slate-600">Receipt ID</th>
+<th class="px-6 py-3 font-table-header text-table-header text-slate-600 text-right">Amount</th>
+<th class="px-6 py-3 font-table-header text-table-header text-slate-600">Mode</th>
+<th class="px-6 py-3 font-table-header text-table-header text-slate-600">Date</th>
+<th class="px-6 py-3 font-table-header text-table-header text-slate-600">Status</th>
+<th class="px-6 py-3 font-table-header text-table-header text-slate-600 text-center">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-200 flex items-center justify-center font-bold text-primary text-xs">RM</div>
+<div>
+<p class="font-bold text-sm text-slate-900">Rohan Malhotra</p>
+<p class="text-[11px] text-slate-500">CABIN-04-A</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-slate-500">ALMS-2023-8821</td>
+<td class="px-6 py-4 font-bold text-sm text-slate-900 text-right">₹1,500.00</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-xs font-medium text-slate-600">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="contactless">contactless</span>
+                                        UPI
+                                    </span>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-slate-500 text-sm">24 Oct 2023</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[11px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                        Success
+                                    </span>
+</td>
+<td class="px-6 py-4 text-center">
+<button class="p-1.5 rounded hover:bg-slate-200 text-slate-400 group-hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="receipt_long">receipt_long</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-200 flex items-center justify-center font-bold text-primary text-xs">PK</div>
+<div>
+<p class="font-bold text-sm text-slate-900">Priya Kapoor</p>
+<p class="text-[11px] text-slate-500">OPEN-HALL-12</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-slate-500">ALMS-2023-8819</td>
+<td class="px-6 py-4 font-bold text-sm text-slate-900 text-right">₹1,200.00</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-xs font-medium text-slate-600">
+<span class="material-symbols-outlined text-[16px] text-slate-400" data-icon="payments">payments</span>
+                                        Cash
+                                    </span>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-slate-500 text-sm">23 Oct 2023</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[11px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                        Success
+                                    </span>
+</td>
+<td class="px-6 py-4 text-center">
+<button class="p-1.5 rounded hover:bg-slate-200 text-slate-400 group-hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="receipt_long">receipt_long</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-200 flex items-center justify-center font-bold text-primary text-xs">AS</div>
+<div>
+<p class="font-bold text-sm text-slate-900">Arjun Singh</p>
+<p class="text-[11px] text-slate-500">VIP-LOUNGE-01</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-slate-500">ALMS-2023-8815</td>
+<td class="px-6 py-4 font-bold text-sm text-slate-900 text-right">₹2,800.00</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-xs font-medium text-slate-600">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="account_balance">account_balance</span>
+                                        Bank Transfer
+                                    </span>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-slate-500 text-sm">22 Oct 2023</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant text-[11px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                        Processing
+                                    </span>
+</td>
+<td class="px-6 py-4 text-center">
+<button class="p-1.5 rounded hover:bg-slate-200 text-slate-400 group-hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="receipt_long">receipt_long</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-200 flex items-center justify-center font-bold text-primary text-xs">SD</div>
+<div>
+<p class="font-bold text-sm text-slate-900">Sneha Das</p>
+<p class="text-[11px] text-slate-500">CABIN-02-C</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-slate-500">ALMS-2023-8810</td>
+<td class="px-6 py-4 font-bold text-sm text-slate-900 text-right">₹1,500.00</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-xs font-medium text-slate-600">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="contactless">contactless</span>
+                                        UPI
+                                    </span>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-slate-500 text-sm">21 Oct 2023</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[11px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                        Success
+                                    </span>
+</td>
+<td class="px-6 py-4 text-center">
+<button class="p-1.5 rounded hover:bg-slate-200 text-slate-400 group-hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="receipt_long">receipt_long</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-slate-50 flex items-center justify-between border-t border-slate-200">
+<p class="text-[11px] text-slate-500 font-medium">Showing 1-10 of 48 transactions</p>
+<div class="flex gap-1">
+<button class="p-1.5 border border-slate-200 bg-white rounded hover:bg-slate-50 disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-1.5 border border-slate-200 bg-white rounded hover:bg-slate-50">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Asymmetric Bento-style Secondary Insights -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8">
+<!-- Outstanding Summary Mini-Card -->
+<div class="lg:col-span-4 bg-white border border-slate-200 rounded-lg p-6 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-center mb-4">
+<h4 class="font-h3 text-h3 text-primary text-[18px]">Fee Reminders</h4>
+<span class="material-symbols-outlined text-slate-400" data-icon="sms_failed">sms_failed</span>
+</div>
+<ul class="space-y-4">
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="text-sm font-medium">Vikram Singh</span>
+</div>
+<span class="text-xs font-bold text-error">Overdue 8d</span>
+</li>
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="text-sm font-medium">Ananya Rao</span>
+</div>
+<span class="text-xs font-bold text-error">Overdue 3d</span>
+</li>
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<span class="text-sm font-medium">Karan Johar</span>
+</div>
+<span class="text-xs font-bold text-slate-500">Due Today</span>
+</li>
+</ul>
+</div>
+<button class="mt-6 w-full py-2 bg-slate-100 text-slate-600 font-label text-[11px] rounded-lg hover:bg-slate-200 uppercase tracking-widest transition-colors">
+                        Send Bulk Reminders
+                    </button>
+</div>
+<!-- Growth Visualization Card -->
+<div class="lg:col-span-8 bg-blue-900 rounded-lg p-6 relative overflow-hidden text-white">
+<div class="relative z-10 flex flex-col h-full">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-h3 text-h3 text-[20px]">Annual Revenue Forecast</h4>
+<p class="text-blue-200 text-xs mt-1">Projected collection based on current seat occupancy trends.</p>
+</div>
+<div class="bg-white/10 p-2 rounded-lg backdrop-blur-md border border-white/20">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+</div>
+</div>
+<div class="mt-8 flex-1 flex items-end gap-2">
+<div class="flex-1 bg-white/10 rounded-t-sm h-[40%]"></div>
+<div class="flex-1 bg-white/10 rounded-t-sm h-[55%]"></div>
+<div class="flex-1 bg-white/10 rounded-t-sm h-[45%]"></div>
+<div class="flex-1 bg-white/20 rounded-t-sm h-[65%]"></div>
+<div class="flex-1 bg-white/30 rounded-t-sm h-[80%] border-t-2 border-white"></div>
+<div class="flex-1 bg-white/10 rounded-t-sm h-[70%] border-t-2 border-white/40 border-dashed"></div>
+</div>
+<div class="mt-4 pt-4 border-t border-white/10 flex justify-between items-center">
+<div class="flex items-center gap-4 text-[11px] font-bold tracking-widest uppercase">
+<span class="text-blue-300">Aug</span>
+<span class="text-blue-300">Sep</span>
+<span class="text-white">Oct (Current)</span>
+<span class="text-blue-400 italic">Nov (Exp)</span>
+</div>
+<p class="text-sm font-newsreader italic">"Targeting ₹5.5L for Q4"</p>
+</div>
+</div>
+<!-- Decorative element -->
+<div class="absolute -right-16 -top-16 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button for Rapid Entry -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-transform z-50">
+<span class="material-symbols-outlined text-[32px]" data-icon="add_card">add_card</span>
+</button>
+</body></html>

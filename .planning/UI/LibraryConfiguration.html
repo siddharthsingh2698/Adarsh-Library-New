@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700;6..72,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#eeedf4",
+                        "secondary": "#2b6954",
+                        "tertiary-fixed": "#ffdbcb",
+                        "on-background": "#1a1b21",
+                        "on-secondary-fixed": "#002117",
+                        "on-tertiary-container": "#f39461",
+                        "primary-fixed": "#dce1ff",
+                        "surface-bright": "#faf8ff",
+                        "tertiary-fixed-dim": "#ffb691",
+                        "tertiary-container": "#6e2c00",
+                        "on-secondary-fixed-variant": "#0b513d",
+                        "on-primary-container": "#90a8ff",
+                        "secondary-fixed-dim": "#95d3ba",
+                        "surface-container-highest": "#e3e1e9",
+                        "surface-variant": "#e3e1e9",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f1f0f7",
+                        "on-primary": "#ffffff",
+                        "background": "#faf8ff",
+                        "on-primary-fixed-variant": "#264191",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#b6c4ff",
+                        "surface-dim": "#dad9e1",
+                        "secondary-container": "#adedd3",
+                        "surface-container-low": "#f4f3fa",
+                        "on-primary-fixed": "#00164e",
+                        "primary-fixed-dim": "#b6c4ff",
+                        "secondary-fixed": "#b0f0d6",
+                        "error": "#ba1a1a",
+                        "primary": "#00236f",
+                        "tertiary": "#4b1c00",
+                        "primary-container": "#1e3a8a",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#444651",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#faf8ff",
+                        "on-secondary-container": "#306d58",
+                        "surface-container-high": "#e9e7ef",
+                        "inverse-surface": "#2f3036",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#341100",
+                        "on-tertiary-fixed-variant": "#773205",
+                        "outline": "#757682",
+                        "outline-variant": "#c5c5d3",
+                        "on-surface": "#1a1b21",
+                        "surface-tint": "#4059aa"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "density-comfortable": "16px",
+                        "gutter": "16px",
+                        "density-compact": "8px",
+                        "container-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "table-header": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h1": ["Newsreader"],
+                        "label": ["Inter"],
+                        "h2": ["Newsreader"],
+                        "data-mono": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "h3": ["Newsreader"],
+                        "newsreader": ["Newsreader"]
+                    },
+                    "fontSize": {
+                        "table-header": ["13px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label": ["12px", {"lineHeight": "1", "fontWeight": "500"}],
+                        "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface-container-low font-body-md text-on-surface">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col py-6 bg-slate-100 dark:bg-slate-950 h-screen w-64 border-r border-slate-200 dark:border-slate-800 z-50">
+<div class="px-6 mb-10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-white" data-icon="account_balance">account_balance</span>
+</div>
+<div>
+<h2 class="text-lg font-black text-blue-900 dark:text-blue-400 uppercase tracking-tight font-newsreader">Adarsh Library</h2>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Institutional Archive</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 font-newsreader text-sm font-medium transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 font-newsreader text-sm font-medium transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span>Seat Map</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 font-newsreader text-sm font-medium transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Student Directory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-900 font-newsreader text-sm font-medium transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Fee Ledger</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-blue-900 dark:text-blue-300 bg-white dark:bg-slate-900 border-l-4 border-blue-900 dark:border-blue-500 font-bold font-newsreader text-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Configuration</span>
+</a>
+</nav>
+<div class="mt-auto px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 font-newsreader text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 font-newsreader text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<div class="ml-64 min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-16 px-6 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-50 border-none rounded focus:ring-2 focus:ring-primary font-newsreader italic text-sm" placeholder="Search titles, authors, or ISBN..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-50 transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer">
+<div class="text-right">
+<p class="text-xs font-bold text-blue-900">Admin Panel</p>
+<p class="text-[10px] text-slate-500">Super Administrator</p>
+</div>
+<img alt="Administrator Profile" class="w-8 h-8 rounded-full border border-slate-200" data-alt="A professional headshot of a mature university administrator in a modern office environment. The person is wearing a sharp charcoal suit and glasses, conveying authority and scholarly competence. The background is softly blurred, showing a high-end academic library with floor-to-ceiling bookshelves and warm, focused lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjwiekwD4NY_MsrvcxEbAUjFNWYRbkFKVo_8WdaL5p2bR5GJiaAL7wApSA8Xm1AU2ySUEeDxXumug2K1WFyxBRf3s3wWiLevM9itdOQhwNTgAvDfGLx4j6nQpI3mnDgs3cGEsGxz2Nu3R5bSWa4Iq4pFHieLv6EyTAnqVSmCEK9PY1jKI8zdEzkqO8lqPd_pDRdZP4TU3wp0TPX6VBImdWEvbY_-lWIM0Zs5UUYYaNBsNpPDV5eO8Gz_5izbNTLHZKzqmB6LyPXZC9"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="p-8 flex-1">
+<div class="max-w-6xl mx-auto">
+<header class="mb-8">
+<h1 class="font-h1 text-h1 text-primary mb-2">Library Configuration</h1>
+<p class="font-body-md text-on-surface-variant max-w-2xl">Define institutional parameters for resource accessibility, operational scheduling, and administrative fee structures.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Hours & Slots -->
+<div class="lg:col-span-7 space-y-8">
+<!-- Opening Hours Section -->
+<section class="bg-white border border-slate-200 p-6 rounded-lg shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="schedule">schedule</span>
+<h3 class="font-h3 text-h3 text-primary">Opening Hours</h3>
+</div>
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-widest rounded">System Active</span>
+</div>
+<div class="space-y-4">
+<div class="grid grid-cols-7 gap-2">
+<template id="day-row">
+<div class="flex flex-col items-center p-3 border border-slate-100 bg-slate-50 rounded">
+<span class="text-[10px] font-bold text-slate-400 uppercase mb-2">Mon</span>
+<input checked="" class="rounded border-slate-300 text-primary focus:ring-primary mb-2" type="checkbox"/>
+</div>
+</template>
+<!-- Days Generator -->
+<div class="flex flex-col items-center p-3 border border-blue-100 bg-blue-50 rounded">
+<span class="text-[10px] font-bold text-blue-900 uppercase mb-2">Mon</span>
+<input checked="" class="rounded border-blue-300 text-primary focus:ring-primary" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center p-3 border border-blue-100 bg-blue-50 rounded">
+<span class="text-[10px] font-bold text-blue-900 uppercase mb-2">Tue</span>
+<input checked="" class="rounded border-blue-300 text-primary focus:ring-primary" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center p-3 border border-blue-100 bg-blue-50 rounded">
+<span class="text-[10px] font-bold text-blue-900 uppercase mb-2">Wed</span>
+<input checked="" class="rounded border-blue-300 text-primary focus:ring-primary" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center p-3 border border-blue-100 bg-blue-50 rounded">
+<span class="text-[10px] font-bold text-blue-900 uppercase mb-2">Thu</span>
+<input checked="" class="rounded border-blue-300 text-primary focus:ring-primary" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center p-3 border border-blue-100 bg-blue-50 rounded">
+<span class="text-[10px] font-bold text-blue-900 uppercase mb-2">Fri</span>
+<input checked="" class="rounded border-blue-300 text-primary focus:ring-primary" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center p-3 border border-slate-100 bg-slate-100/50 rounded">
+<span class="text-[10px] font-bold text-slate-400 uppercase mb-2">Sat</span>
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center p-3 border border-slate-100 bg-slate-100/50 rounded">
+<span class="text-[10px] font-bold text-slate-400 uppercase mb-2">Sun</span>
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-100">
+<div>
+<label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Facility Opens</label>
+<input class="w-full border-slate-300 rounded focus:ring-primary text-sm" type="time" value="06:00"/>
+</div>
+<div>
+<label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Facility Closes</label>
+<input class="w-full border-slate-300 rounded focus:ring-primary text-sm" type="time" value="22:00"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Time Slot Definitions -->
+<section class="bg-white border border-slate-200 p-6 rounded-lg shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="history_toggle_off">history_toggle_off</span>
+<h3 class="font-h3 text-h3 text-primary">Time Slot Definitions</h3>
+</div>
+<button class="text-xs font-bold text-primary flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                                    Add Custom Slot
+                                </button>
+</div>
+<div class="space-y-3">
+<!-- Slot 1 -->
+<div class="flex items-center gap-4 p-4 bg-slate-50 border border-slate-100 rounded-lg group">
+<div class="flex flex-col flex-1">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Morning Session</span>
+<div class="flex items-center gap-2">
+<span class="font-bold text-blue-900">06:00 AM</span>
+<span class="text-slate-300">—</span>
+<span class="font-bold text-blue-900">10:00 AM</span>
+</div>
+</div>
+<div class="w-32">
+<label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Max Capacity</label>
+<div class="flex items-center gap-2">
+<input class="w-full h-8 text-xs border-slate-300 rounded focus:ring-primary" type="number" value="120"/>
+<span class="material-symbols-outlined text-slate-300 text-sm">groups</span>
+</div>
+</div>
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-slate-400 hover:text-error" data-icon="delete">delete</span>
+</button>
+</div>
+<!-- Slot 2 -->
+<div class="flex items-center gap-4 p-4 bg-slate-50 border border-slate-100 rounded-lg group">
+<div class="flex flex-col flex-1">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Core Study Hours</span>
+<div class="flex items-center gap-2">
+<span class="font-bold text-blue-900">10:00 AM</span>
+<span class="text-slate-300">—</span>
+<span class="font-bold text-blue-900">04:00 PM</span>
+</div>
+</div>
+<div class="w-32">
+<label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Max Capacity</label>
+<div class="flex items-center gap-2">
+<input class="w-full h-8 text-xs border-slate-300 rounded focus:ring-primary" type="number" value="200"/>
+<span class="material-symbols-outlined text-slate-300 text-sm">groups</span>
+</div>
+</div>
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-slate-400 hover:text-error" data-icon="delete">delete</span>
+</button>
+</div>
+<!-- Slot 3 -->
+<div class="flex items-center gap-4 p-4 bg-slate-50 border border-slate-100 rounded-lg group">
+<div class="flex flex-col flex-1">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Evening Intensive</span>
+<div class="flex items-center gap-2">
+<span class="font-bold text-blue-900">04:00 PM</span>
+<span class="text-slate-300">—</span>
+<span class="font-bold text-blue-900">10:00 PM</span>
+</div>
+</div>
+<div class="w-32">
+<label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Max Capacity</label>
+<div class="flex items-center gap-2">
+<input class="w-full h-8 text-xs border-slate-300 rounded focus:ring-primary" type="number" value="150"/>
+<span class="material-symbols-outlined text-slate-300 text-sm">groups</span>
+</div>
+</div>
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-slate-400 hover:text-error" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Fee Rules & Info -->
+<div class="lg:col-span-5 space-y-8">
+<!-- Fee Rules Section -->
+<section class="bg-white border border-slate-200 p-6 rounded-lg shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary" data-icon="payments">payments</span>
+<h3 class="font-h3 text-h3 text-primary">Subscription Rules</h3>
+</div>
+<div class="space-y-6">
+<!-- Monthly Rule -->
+<div class="p-4 border border-slate-200 rounded-lg">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-newsreader font-bold text-lg text-blue-900">Monthly Tier</h4>
+<span class="text-[10px] font-bold text-slate-400 uppercase">Standard</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between py-2 border-b border-slate-50">
+<span class="text-sm text-slate-600">Base Membership</span>
+<div class="flex items-center gap-1 font-bold text-blue-900">
+<span class="text-xs">$</span>
+<span>45.00</span>
+</div>
+</div>
+<div class="flex items-center justify-between py-2 border-b border-slate-50">
+<span class="text-sm text-slate-600">Late Return Fine (per day)</span>
+<div class="flex items-center gap-1 font-bold text-error">
+<span class="text-xs">$</span>
+<span>2.50</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quarterly Rule -->
+<div class="p-4 border-2 border-primary-container bg-primary/5 rounded-lg relative overflow-hidden">
+<div class="absolute top-0 right-0">
+<div class="bg-primary-container text-white text-[9px] font-black uppercase px-4 py-1 rotate-45 translate-x-3 translate-y-2">Best Value</div>
+</div>
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-newsreader font-bold text-lg text-blue-900">Quarterly Tier</h4>
+<span class="text-[10px] font-bold text-primary uppercase">Institutional</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between py-2 border-b border-slate-100">
+<span class="text-sm text-slate-600">90-Day Access</span>
+<div class="flex items-center gap-1 font-bold text-blue-900">
+<span class="text-xs">$</span>
+<span>120.00</span>
+</div>
+</div>
+<div class="flex items-center justify-between py-2 border-b border-slate-100">
+<span class="text-sm text-slate-600">Late Return Fine (per day)</span>
+<div class="flex items-center gap-1 font-bold text-error">
+<span class="text-xs">$</span>
+<span>1.50</span>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-3 border-2 border-dashed border-slate-200 text-slate-400 rounded-lg text-sm font-bold flex items-center justify-center gap-2 hover:bg-slate-50 hover:border-slate-300 transition-all">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+                                    Add Annual Pricing Tier
+                                </button>
+</div>
+</section>
+<!-- Quick Analytics / Help Card -->
+<section class="bg-blue-900 p-6 rounded-lg text-white shadow-xl">
+<div class="mb-4">
+<h4 class="font-newsreader font-bold text-xl mb-1">Capacity Forecasting</h4>
+<p class="text-blue-200 text-sm">Current configurations allow for a total of 470 simultaneous patrons across all slots.</p>
+</div>
+<div class="space-y-4">
+<div class="h-2 w-full bg-blue-800 rounded-full overflow-hidden">
+<div class="h-full bg-blue-400 w-[72%]"></div>
+</div>
+<div class="flex justify-between text-[11px] font-bold uppercase tracking-wider">
+<span class="text-blue-300">Optimal Load</span>
+<span class="text-blue-100">72% Allocated</span>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Footer Action Bar -->
+<div class="mt-12 pt-8 border-t border-slate-200 flex items-center justify-between">
+<div class="flex items-center gap-2 text-slate-500">
+<span class="material-symbols-outlined text-sm">info</span>
+<p class="text-xs">All changes are logged in the Institutional Audit Ledger.</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-6 py-2 text-sm font-bold text-blue-900 border border-blue-900 rounded hover:bg-slate-50 transition-colors">Discard Changes</button>
+<button class="px-8 py-2 text-sm font-bold text-white bg-blue-900 rounded hover:bg-blue-800 shadow-lg shadow-blue-900/20 transition-all">Save System Configuration</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
