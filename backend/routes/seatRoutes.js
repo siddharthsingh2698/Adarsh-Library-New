@@ -10,27 +10,58 @@ const router = express.Router();
 router.get('/map', auth, asyncHandler(async (req, res) => {
   const { slot_id } = req.query;
 
-  // Count active allotments per seat (optionally filtered by slot)
   const slotFilter = slot_id ? 'AND sa.slot_id = ?' : '';
   const params     = slot_id ? [slot_id] : [];
 
+  const todayDate = new Date().toISOString().slice(0, 10);
+
   const rows = await db.q(
     `SELECT se.*,
-       sa.id         AS allotment_id,
+       sa.id            AS allotment_id,
        sa.student_id,
        sa.plan_type,
        sa.duration_months,
-       st.name       AS student_name,
-       st.phone      AS student_phone,
-       ts.name       AS slot_name,
+       st.name          AS student_name,
+       st.phone         AS student_phone,
+       ts.name          AS slot_name,
        ts.start_time,
        ts.end_time,
        ts.is_full_day,
-       -- How many slots are filled for this seat
        (SELECT COUNT(*) FROM seat_allotments x WHERE x.seat_id = se.id AND x.is_active = 1) AS slots_filled,
+       -- Is the allotted student currently checked in today?
+       (SELECT COUNT(*) FROM checkins ci
+        WHERE ci.student_id = sa.student_id
+          AND ci.seat_id = se.id
+          AND DATE(ci.check_in_at) = ?
+          AND ci.check_out_at IS NULL) AS is_checked_in_now,
+       -- Is there a walk-in guest on this seat right now?
+       (SELECT ci2.id FROM checkins ci2
+        WHERE ci2.seat_id = se.id
+          AND ci2.check_out_at IS NULL
+          AND ci2.method = 'walkin'
+        LIMIT 1) AS walkin_checkin_id,
+       (SELECT s2.name FROM checkins ci2
+        JOIN students s2 ON s2.id = ci2.student_id
+        WHERE ci2.seat_id = se.id
+          AND ci2.check_out_at IS NULL
+          AND ci2.method = 'walkin'
+        LIMIT 1) AS walkin_student_name,
        CASE
          WHEN se.status = 'maintenance' THEN 'maintenance'
-         WHEN sa.id IS NOT NULL         THEN 'occupied'
+         -- Full day seat: student checked in = occupied
+         WHEN sa.id IS NOT NULL AND ts.is_full_day = 1 AND
+              (SELECT COUNT(*) FROM checkins ci WHERE ci.student_id = sa.student_id
+               AND ci.seat_id = se.id AND DATE(ci.check_in_at) = ? AND ci.check_out_at IS NULL) > 0
+              THEN 'occupied'
+         -- Full day seat: walk-in guest sitting = occupied (guest)
+         WHEN sa.id IS NOT NULL AND ts.is_full_day = 1 AND
+              (SELECT COUNT(*) FROM checkins ci2 WHERE ci2.seat_id = se.id
+               AND ci2.check_out_at IS NULL AND ci2.method = 'walkin') > 0
+              THEN 'occupied'
+         -- Full day seat: student absent = reserved (available for walk-in)
+         WHEN sa.id IS NOT NULL AND ts.is_full_day = 1 THEN 'reserved'
+         -- Shift seat: allotted = occupied
+         WHEN sa.id IS NOT NULL THEN 'occupied'
          ELSE 'available'
        END AS slot_status
      FROM seats se
@@ -39,7 +70,7 @@ router.get('/map', auth, asyncHandler(async (req, res) => {
      LEFT JOIN students st ON st.id = sa.student_id
      LEFT JOIN time_slots ts ON ts.id = sa.slot_id
      ORDER BY CAST(se.seat_number AS UNSIGNED)`,
-    params
+    slot_id ? [todayDate, todayDate, slot_id] : [todayDate, todayDate]
   );
   res.json({ success: true, data: rows });
 }));

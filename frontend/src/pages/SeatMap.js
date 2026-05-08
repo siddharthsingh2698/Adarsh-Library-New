@@ -6,7 +6,7 @@ const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1';
 const STATUS_COLORS = {
   available:   { bg: '#2b6954', label: 'Available' },
   occupied:    { bg: '#ba1a1a', label: 'Occupied' },
-  reserved:    { bg: '#f39461', label: 'Reserved' },
+  reserved:    { bg: '#f59e0b', label: 'Reserved (Absent)' },
   maintenance: { bg: '#c5c5d3', label: 'Maintenance' },
 };
 
@@ -17,6 +17,8 @@ export default function SeatMap() {
   const [selectedSeat, setSelectedSeat] = useState(null);
   const [loading, setLoading] = useState(true);
   const [assignModal, setAssignModal] = useState(false);
+  const [walkinModal, setWalkinModal] = useState(false);
+  const [walkinUid, setWalkinUid]     = useState('');
   const [students, setStudents] = useState([]);
   const [studentSearch, setStudentSearch] = useState('');
   const [studentsLoading, setStudentsLoading] = useState(false);
@@ -102,6 +104,23 @@ export default function SeatMap() {
     const newStatus = current === 'maintenance' ? 'available' : 'maintenance';
     await axios.put(`${API}/seats/${seatId}`, { status: newStatus });
     fetchSeats();
+  };
+
+  const handleWalkin = async () => {
+    if (!walkinUid.trim()) { alert('Enter student ID'); return; }
+    try {
+      const res = await axios.post(`${API}/checkins/walkin`, {
+        qr_code: walkinUid.trim(),
+        seat_id: selectedSeat.id
+      });
+      alert(`✅ ${res.data.message}\n${res.data.note}`);
+      setWalkinModal(false);
+      setWalkinUid('');
+      setSelectedSeat(null);
+      fetchSeats();
+    } catch (e) {
+      alert(e.response?.data?.message || 'Walk-in failed');
+    }
   };
 
   return (
@@ -299,6 +318,11 @@ export default function SeatMap() {
                     Assign Student
                   </button>
                 )}
+                {selectedSeat.slot_status === 'reserved' && (
+                  <button onClick={() => { setWalkinUid(''); setWalkinModal(true); }} style={{ width: '100%', padding: 10, background: '#f59e0b', color: 'white', border: 'none', borderRadius: 4, fontWeight: 700, cursor: 'pointer', fontSize: 13 }}>
+                    Allow Walk-in
+                  </button>
+                )}
                 {selectedSeat.slot_status === 'occupied' && selectedSeat.allotment_id && (
                   <button onClick={() => handleRelease(selectedSeat.allotment_id)} style={{ width: '100%', padding: 10, background: 'rgba(255,255,255,0.15)', color: 'white', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 4, fontWeight: 700, cursor: 'pointer', fontSize: 13 }}>
                     Release Seat
@@ -402,6 +426,39 @@ export default function SeatMap() {
             <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
               <button onClick={() => setAssignModal(false)} style={{ flex: 1, padding: 10, border: '1px solid #e3e1e9', background: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 13, fontWeight: 700 }}>Cancel</button>
               <button onClick={handleAssign} style={{ flex: 1, padding: 10, background: '#00236f', color: 'white', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 13, fontWeight: 700 }}>Assign Seat</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Walk-in Modal */}
+      {walkinModal && selectedSeat && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
+          <div style={{ background: 'white', borderRadius: 4, padding: 32, width: 400, maxWidth: '90vw' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <h3 style={{ fontFamily: 'Newsreader, serif', fontSize: 20, color: '#00236f' }}>
+                Walk-in — Seat {selectedSeat.seat_number}
+              </h3>
+              <button onClick={() => setWalkinModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <p style={{ fontSize: 12, color: '#757682', marginBottom: 20 }}>
+              Full Day student is absent. Enter the walk-in student's ID to allow them to use this seat temporarily.
+            </p>
+            <div style={{ background: '#fff8e1', border: '1px solid #f59e0b', borderRadius: 4, padding: '8px 12px', fontSize: 12, color: '#92400e', marginBottom: 16 }}>
+              ⚠️ Walk-in student may be asked to vacate if the seat owner arrives.
+            </div>
+            <label style={{ fontSize: 11, fontWeight: 700, color: '#757682', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>Student ID</label>
+            <input
+              value={walkinUid}
+              onChange={e => setWalkinUid(e.target.value)}
+              placeholder="ALMS-xxxxxxxx-..."
+              autoFocus
+              style={{ width: '100%', padding: '10px 12px', border: '1px solid #e3e1e9', borderRadius: 4, fontSize: 13, fontFamily: 'monospace', outline: 'none', boxSizing: 'border-box', marginBottom: 16 }}
+            />
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button onClick={() => setWalkinModal(false)} style={{ flex: 1, padding: 10, border: '1px solid #e3e1e9', background: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 13, fontWeight: 700 }}>Cancel</button>
+              <button onClick={handleWalkin} style={{ flex: 1, padding: 10, background: '#f59e0b', color: 'white', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 13, fontWeight: 700 }}>Allow Walk-in</button>
             </div>
           </div>
         </div>

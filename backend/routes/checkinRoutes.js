@@ -50,6 +50,76 @@ router.get('/attendance', auth, asyncHandler(async (req, res) => {
   res.json({ success: true, data: rows });
 }));
 
+// POST /api/v1/checkins/walkin — guest sits on an absent Full Day student's seat
+router.post('/walkin', asyncHandler(async (req, res) => {
+  const { qr_code, seat_id } = req.body;
+  if (!qr_code || !seat_id)
+    return res.status(400).json({ success: false, message: 'qr_code and seat_id required' });
+
+  // Find student
+  const input = qr_code.trim();
+  let students = await db.q(
+    `SELECT * FROM students WHERE (qr_code = ? OR qr_code = ? OR id = ?)
+     AND status = 'active' AND deleted_at IS NULL LIMIT 1`,
+    [input, 'ALMS-' + input, input]
+  );
+  let student = students[0];
+  if (!student) {
+    const all = await db.q("SELECT * FROM students WHERE status = 'active' AND deleted_at IS NULL");
+    student = all.find(s => s.id.toLowerCase().startsWith(input.replace(/^ALMS-/i,'').toLowerCase()));
+  }
+  if (!student) return res.status(404).json({ success: false, message: 'Student not found' });
+
+  // Check student not already checked in
+  const active = await db.q('SELECT id FROM checkins WHERE student_id = ? AND check_out_at IS NULL', [student.id]);
+  if (active.length) return res.status(409).json({ success: false, message: 'Already checked in somewhere' });
+
+  // Verify seat is a Full Day seat with absent student (reserved status)
+  const todayDate = new Date().toISOString().slice(0, 10);
+  const seatAllotment = await db.q(
+    `SELECT sa.student_id, sa.slot_id FROM seat_allotments sa
+     JOIN time_slots ts ON ts.id = sa.slot_id
+     WHERE sa.seat_id = ? AND sa.is_active = 1 AND ts.is_full_day = 1`,
+    [seat_id]
+  );
+  if (!seatAllotment.length)
+    return res.status(400).json({ success: false, message: 'This seat is not a Full Day reserved seat' });
+
+  // Check the Full Day student is NOT currently checked in
+  const ownerCheckedIn = await db.q(
+    `SELECT id FROM checkins WHERE student_id = ? AND seat_id = ?
+     AND DATE(check_in_at) = ? AND check_out_at IS NULL`,
+    [seatAllotment[0].student_id, seat_id, todayDate]
+  );
+  if (ownerCheckedIn.length)
+    return res.status(409).json({ success: false, message: 'Seat owner is currently present' });
+
+  // Check no other walk-in already on this seat
+  const existingWalkin = await db.q(
+    "SELECT id FROM checkins WHERE seat_id = ? AND check_out_at IS NULL AND method = 'walkin'",
+    [seat_id]
+  );
+  if (existingWalkin.length)
+    return res.status(409).json({ success: false, message: 'Another student is already using this seat' });
+
+  // Create walk-in check-in
+  await db.q(
+    "INSERT INTO checkins (id, student_id, seat_id, slot_id, method, flagged) VALUES (UUID(),?,?,?,'walkin',0)",
+    [student.id, seat_id, seatAllotment[0].slot_id]
+  );
+
+  const seat = await db.q('SELECT seat_number FROM seats WHERE id = ?', [seat_id]);
+
+  res.json({
+    success: true,
+    action: 'walkin',
+    message: `Walk-in check-in successful`,
+    student_name: student.name,
+    seat_number: seat[0]?.seat_number,
+    note: 'You may be asked to vacate if the seat owner arrives'
+  });
+}));
+
 // POST /api/v1/checkins/qr  — public toggle: scan once = check in, scan again = check out
 router.post('/qr', asyncHandler(async (req, res) => {
   const { qr_code } = req.body;
