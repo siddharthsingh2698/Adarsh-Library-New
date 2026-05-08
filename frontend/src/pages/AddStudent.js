@@ -92,33 +92,32 @@ export default function AddStudent() {
     if (assignSeat && (!selectedSlot || !startDate)) {
       setError('Select slot and start date'); return;
     }
-    if (assignSeat && !autoSeat) {
-      setError('No available seats for this slot. Try a different slot or locker preference.'); return;
+    if (assignSeat && !selectedSeat) {
+      setError('Please pick a seat from the grid'); return;
     }
     setError(''); setLoading(true);
 
     try {
-      // 1. Create student
       const { data: studentData } = await axios.post(`${API}/students`, form);
       const studentId = studentData.data.id;
 
-      // 2. Assign seat if selected
-      if (assignSeat && selectedSlot && autoSeat) {
+      if (assignSeat && selectedSlot && selectedSeat) {
         await axios.post(`${API}/seats/allotments`, {
           student_id:      studentId,
-          seat_id:         autoSeat.id,
+          seat_id:         selectedSeat,
           slot_id:         selectedSlot,
           start_date:      startDate,
           duration_months: parseInt(effectiveDuration),
         });
       }
 
+      const pickedSeat = seats.find(s => s.id === selectedSeat);
       setSuccess({
         name:             studentData.data.name,
         student_login_id: studentData.data.student_login_id,
-        seat:             autoSeat?.seat_number,
+        seat:             pickedSeat?.seat_number,
         slot:             selectedSlotObj?.name,
-        has_locker:       autoSeat?.has_locker,
+        has_locker:       pickedSeat?.has_locker,
         duration:         effectiveDuration,
       });
     } catch (err) {
@@ -309,29 +308,53 @@ export default function AddStudent() {
                     </Field>
                   )}
 
-                  {/* Auto-seat preview */}
-                  {selectedSlot && (
-                    <div style={{
-                      padding: '12px 16px', borderRadius: 6,
-                      background: autoSeat ? '#adedd3' : '#ffdad6',
-                      border: `1px solid ${autoSeat ? '#2b6954' : '#ba1a1a'}`,
-                      fontSize: 13
-                    }}>
-                      {autoSeat ? (
-                        <div>
-                          <div style={{ fontWeight: 700, color: '#2b6954' }}>
-                            ✅ Seat {autoSeat.seat_number} will be assigned
-                            {autoSeat.has_locker ? ' 🔒 (with locker)' : ''}
-                          </div>
-                          <div style={{ fontSize: 11, color: '#306d58', marginTop: 2 }}>
-                            {autoSeat.zone} · {seats.filter(s => wantLocker ? s.has_locker : !s.has_locker).length} seats available
-                          </div>
-                        </div>
-                      ) : (
-                        <div style={{ color: '#ba1a1a', fontWeight: 700 }}>
-                          ❌ No {wantLocker ? 'locker' : 'normal'} seats available for this slot
+                  {/* Seat picker grid */}
+                  {selectedSlot && seats.length > 0 && (
+                    <Field label="Pick a Seat" required>
+                      <div style={{ fontSize: 11, color: '#757682', marginBottom: 8 }}>
+                        Showing {wantLocker ? 'locker' : 'normal'} seats available for this slot
+                      </div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, maxHeight: 200, overflowY: 'auto', padding: 4 }}>
+                        {seats
+                          .filter(s => wantLocker ? s.has_locker : !s.has_locker)
+                          .sort((a, b) => parseInt(a.seat_number) - parseInt(b.seat_number))
+                          .map(s => (
+                            <div
+                              key={s.id}
+                              onClick={() => setSelectedSeat(s.id)}
+                              title={`Seat ${s.seat_number}${s.has_locker ? ' 🔒' : ''}${s.has_power ? ' ⚡' : ''}`}
+                              style={{
+                                width: 40, height: 40, borderRadius: 4, cursor: 'pointer',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: 11, fontWeight: 700,
+                                background: selectedSeat === s.id ? '#00236f' : '#f4f3fa',
+                                color: selectedSeat === s.id ? 'white' : '#444651',
+                                border: `2px solid ${selectedSeat === s.id ? '#00236f' : '#e3e1e9'}`,
+                                transition: 'all 0.15s',
+                              }}
+                            >
+                              {s.seat_number}
+                            </div>
+                          ))
+                        }
+                      </div>
+                      {selectedSeat && (
+                        <div style={{ marginTop: 8, fontSize: 13, fontWeight: 700, color: '#2b6954' }}>
+                          ✅ Seat {seats.find(s => s.id === selectedSeat)?.seat_number} selected
+                          {seats.find(s => s.id === selectedSeat)?.has_locker ? ' 🔒' : ''}
                         </div>
                       )}
+                      {seats.filter(s => wantLocker ? s.has_locker : !s.has_locker).length === 0 && (
+                        <div style={{ padding: '10px 12px', background: '#ffdad6', borderRadius: 4, fontSize: 13, color: '#ba1a1a' }}>
+                          No {wantLocker ? 'locker' : 'normal'} seats available for this slot
+                        </div>
+                      )}
+                    </Field>
+                  )}
+
+                  {selectedSlot && seats.length === 0 && (
+                    <div style={{ padding: '10px 14px', background: '#ffdad6', borderRadius: 4, fontSize: 13, color: '#ba1a1a' }}>
+                      ❌ No available seats for this slot
                     </div>
                   )}
 
