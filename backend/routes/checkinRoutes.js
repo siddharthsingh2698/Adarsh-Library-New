@@ -109,16 +109,26 @@ router.post('/qr', asyncHandler(async (req, res) => {
   }
 
   // ── CHECK IN (not inside — first scan) ───────────────────────────────
+  // Pick the allotment whose slot time window matches NOW
   const allotments = await db.q(
     `SELECT sa.seat_id, sa.slot_id, se.seat_number, ts.name AS slot_name,
-            ts.start_time, ts.end_time
+            ts.start_time, ts.end_time, ts.is_full_day
      FROM seat_allotments sa
      JOIN seats se ON se.id = sa.seat_id
      JOIN time_slots ts ON ts.id = sa.slot_id
-     WHERE sa.student_id = ? AND sa.is_active = 1`,
+     WHERE sa.student_id = ? AND sa.is_active = 1
+     ORDER BY ts.is_full_day DESC, ts.start_time ASC`,
     [student.id]
   );
-  const allotment = allotments[0] || {};
+
+  const timeNow = new Date().toTimeString().slice(0, 8);
+
+  // Prefer the allotment whose slot window contains current time
+  const matchingAllotment = allotments.find(a =>
+    timeNow >= a.start_time && timeNow <= a.end_time
+  ) || allotments[0] || {};
+
+  const allotment = matchingAllotment;
 
   let flagged = 0;
   if (allotment.start_time && allotment.end_time) {

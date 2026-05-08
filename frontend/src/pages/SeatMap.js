@@ -20,7 +20,7 @@ export default function SeatMap() {
   const [students, setStudents] = useState([]);
   const [studentSearch, setStudentSearch] = useState('');
   const [studentsLoading, setStudentsLoading] = useState(false);
-  const [assignForm, setAssignForm] = useState({ student_id: '', slot_id: '', start_date: '', end_date: '' });
+  const [assignForm, setAssignForm] = useState({ student_id: '', slot_id: '', start_date: '', end_date: '', duration_months: '1' });
 
   const fetchSeats = useCallback(async () => {
     setLoading(true);
@@ -69,17 +69,18 @@ export default function SeatMap() {
   };
 
   const handleAssign = async () => {
-    if (!assignForm.student_id || !assignForm.slot_id || !assignForm.start_date || !assignForm.end_date) {
-      alert('All fields required'); return;
+    if (!assignForm.student_id || !assignForm.slot_id || !assignForm.start_date) {
+      alert('Student, slot and start date required'); return;
     }
     try {
-      await axios.post(`${API}/seats/allotments`, {
-        student_id: assignForm.student_id,
-        seat_id: selectedSeat.id,
-        slot_id: assignForm.slot_id,
-        start_date: assignForm.start_date,
-        end_date: assignForm.end_date,
+      const res = await axios.post(`${API}/seats/allotments`, {
+        student_id:      assignForm.student_id,
+        seat_id:         selectedSeat.id,
+        slot_id:         assignForm.slot_id,
+        start_date:      assignForm.start_date,
+        duration_months: parseInt(assignForm.duration_months) || 1,
       });
+      alert(res.data.message);
       setAssignModal(false);
       setSelectedSeat(null);
       fetchSeats();
@@ -375,19 +376,28 @@ export default function SeatMap() {
                 <label style={{ fontSize: 11, fontWeight: 700, color: '#757682', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>Time Slot</label>
                 <select value={assignForm.slot_id} onChange={e => setAssignForm(f => ({ ...f, slot_id: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e3e1e9', borderRadius: 4, fontSize: 13, outline: 'none' }}>
                   <option value="">Select slot...</option>
-                  {slots.map(s => <option key={s.id} value={s.id}>{s.name} ({s.start_time}–{s.end_time})</option>)}
+                  {slots.map(s => <option key={s.id} value={s.id}>{s.name} ({s.start_time}–{s.end_time}) — ₹{parseFloat(s.monthly_fee).toLocaleString('en-IN')}/mo</option>)}
                 </select>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#757682', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>Start Date</label>
-                  <input type="date" value={assignForm.start_date} onChange={e => setAssignForm(f => ({ ...f, start_date: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e3e1e9', borderRadius: 4, fontSize: 13, outline: 'none' }} />
-                </div>
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#757682', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>End Date</label>
-                  <input type="date" value={assignForm.end_date} onChange={e => setAssignForm(f => ({ ...f, end_date: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e3e1e9', borderRadius: 4, fontSize: 13, outline: 'none' }} />
-                </div>
+              <div>
+                <label style={{ fontSize: 11, fontWeight: 700, color: '#757682', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>Plan Duration</label>
+                <select value={assignForm.duration_months} onChange={e => setAssignForm(f => ({ ...f, duration_months: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e3e1e9', borderRadius: 4, fontSize: 13, outline: 'none' }}>
+                  <option value="1">1 Month</option>
+                  <option value="3">3 Months (Quarterly)</option>
+                  <option value="6">6 Months</option>
+                  <option value="12">12 Months (Annual)</option>
+                </select>
+                <p style={{ fontSize: 11, color: '#757682', marginTop: 4 }}>Fee records auto-generated for each month</p>
               </div>
+              <div>
+                <label style={{ fontSize: 11, fontWeight: 700, color: '#757682', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>Start Date</label>
+                <input type="date" value={assignForm.start_date} onChange={e => setAssignForm(f => ({ ...f, start_date: e.target.value }))} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e3e1e9', borderRadius: 4, fontSize: 13, outline: 'none' }} />
+              </div>
+              {(selectedSeat?.has_locker === 1 || selectedSeat?.has_locker === true) && (
+                <div style={{ padding: '8px 12px', background: '#fff8e1', border: '1px solid #f59e0b', borderRadius: 4, fontSize: 12, color: '#92400e' }}>
+                  🔒 This seat includes a locker
+                </div>
+              )}
             </div>
             <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
               <button onClick={() => setAssignModal(false)} style={{ flex: 1, padding: 10, border: '1px solid #e3e1e9', background: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 13, fontWeight: 700 }}>Cancel</button>
