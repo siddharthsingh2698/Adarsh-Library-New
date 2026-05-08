@@ -48,6 +48,7 @@ export default function AddStudent() {
   const [selectedSlot, setSelectedSlot]     = useState('');
   const [selectedSeat, setSelectedSeat]     = useState('');
   const [durationMonths, setDurationMonths] = useState('1');
+  const [wantLocker, setWantLocker]         = useState(false);
   const [startDate, setStartDate]           = useState(new Date().toISOString().slice(0, 10));
 
   const [loading, setLoading] = useState(false);
@@ -71,11 +72,28 @@ export default function AddStudent() {
       }).catch(() => {});
   }, [selectedSlot]);
 
+  const selectedSlotObj = slots.find(s => s.id === selectedSlot);
+  const isFullDay       = selectedSlotObj?.is_full_day === 1 || selectedSlotObj?.name?.toLowerCase().includes('full');
+  const isShift         = selectedSlot && !isFullDay;
+
+  // For shifts: always 1 month. For full day: 1 or 3 months.
+  const effectiveDuration = isShift ? '1' : durationMonths;
+
+  // Auto-pick first available seat (locker or normal based on preference)
+  const autoSeat = (() => {
+    if (!seats.length) return null;
+    if (wantLocker) return seats.find(s => s.has_locker) || null;
+    return seats.find(s => !s.has_locker) || seats[0];
+  })();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.phone) { setError('Name and phone are required'); return; }
-    if (assignSeat && (!selectedSlot || !selectedSeat || !startDate)) {
-      setError('Select slot, seat and start date'); return;
+    if (assignSeat && (!selectedSlot || !startDate)) {
+      setError('Select slot and start date'); return;
+    }
+    if (assignSeat && !autoSeat) {
+      setError('No available seats for this slot. Try a different slot or locker preference.'); return;
     }
     setError(''); setLoading(true);
 
@@ -85,21 +103,23 @@ export default function AddStudent() {
       const studentId = studentData.data.id;
 
       // 2. Assign seat if selected
-      if (assignSeat && selectedSlot && selectedSeat) {
+      if (assignSeat && selectedSlot && autoSeat) {
         await axios.post(`${API}/seats/allotments`, {
           student_id:      studentId,
-          seat_id:         selectedSeat,
+          seat_id:         autoSeat.id,
           slot_id:         selectedSlot,
           start_date:      startDate,
-          duration_months: parseInt(durationMonths),
+          duration_months: parseInt(effectiveDuration),
         });
       }
 
       setSuccess({
         name:             studentData.data.name,
         student_login_id: studentData.data.student_login_id,
-        seat:             seats.find(s => s.id === selectedSeat)?.seat_number,
-        slot:             slots.find(s => s.id === selectedSlot)?.name,
+        seat:             autoSeat?.seat_number,
+        slot:             selectedSlotObj?.name,
+        has_locker:       autoSeat?.has_locker,
+        duration:         effectiveDuration,
       });
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
@@ -128,7 +148,13 @@ export default function AddStudent() {
             {success.seat && (
               <div>
                 <div style={{ fontSize: 11, fontWeight: 700, color: '#757682', textTransform: 'uppercase', marginBottom: 4 }}>Assigned Seat</div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: '#2b6954' }}>Seat {success.seat} — {success.slot}</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: '#2b6954' }}>
+                  Seat {success.seat} — {success.slot}
+                  {success.has_locker ? ' 🔒 Locker' : ''}
+                </div>
+                <div style={{ fontSize: 12, color: '#757682', marginTop: 2 }}>
+                  {success.duration} month{success.duration > 1 ? 's' : ''} plan
+                </div>
               </div>
             )}
           </div>
@@ -211,6 +237,8 @@ export default function AddStudent() {
 
               {assignSeat ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+                  {/* Step 1 — Slot */}
                   <Field label="Time Slot" required>
                     <select value={selectedSlot} onChange={e => setSelectedSlot(e.target.value)} required={assignSeat} style={inputStyle}>
                       <option value="">Select slot...</option>
@@ -222,50 +250,91 @@ export default function AddStudent() {
                     </select>
                   </Field>
 
-                  <Field label="Seat Number" required>
-                    {!selectedSlot ? (
-                      <div style={{ padding: '10px 12px', border: '1px solid #e3e1e9', borderRadius: 4, fontSize: 13, color: '#c5c5d3' }}>
-                        Select a slot first
-                      </div>
-                    ) : seats.length === 0 ? (
-                      <div style={{ padding: '10px 12px', border: '1px solid #ffdad6', borderRadius: 4, fontSize: 13, color: '#ba1a1a', background: '#ffdad6' }}>
-                        No available seats for this slot
-                      </div>
-                    ) : (
-                      <select value={selectedSeat} onChange={e => setSelectedSeat(e.target.value)} required={assignSeat} style={inputStyle}>
-                        <option value="">Select seat...</option>
-                        {seats.sort((a, b) => parseInt(a.seat_number) - parseInt(b.seat_number)).map(s => (
-                          <option key={s.id} value={s.id}>
-                            Seat {s.seat_number} — {s.zone}{s.has_locker ? ' 🔒 Locker' : ''}{s.has_power ? ' ⚡' : ''}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </Field>
-
-                  <Field label="Plan Duration" required>
-                    <select value={durationMonths} onChange={e => setDurationMonths(e.target.value)} style={inputStyle}>
-                      <option value="1">1 Month — Monthly</option>
-                      <option value="3">3 Months — Quarterly</option>
-                      <option value="6">6 Months — Half Yearly</option>
-                      <option value="12">12 Months — Annual</option>
-                    </select>
-                  </Field>
-
-                  <Field label="Start Date" required>
-                    <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} required={assignSeat} style={inputStyle} />
-                  </Field>
-
-                  {/* Fee preview */}
-                  {selectedSlot && durationMonths && (
-                    <div style={{ background: '#f4f3fa', borderRadius: 4, padding: 14, fontSize: 13 }}>
-                      <div style={{ fontWeight: 700, color: '#00236f', marginBottom: 4 }}>Fee Preview</div>
-                      <div style={{ color: '#444651' }}>
-                        ₹{parseFloat(slots.find(s => s.id === selectedSlot)?.monthly_fee || 0).toLocaleString('en-IN')} × {durationMonths} month{durationMonths > 1 ? 's' : ''} = <strong>₹{(parseFloat(slots.find(s => s.id === selectedSlot)?.monthly_fee || 0) * parseInt(durationMonths)).toLocaleString('en-IN')}</strong>
-                      </div>
-                      <div style={{ fontSize: 11, color: '#757682', marginTop: 4 }}>{durationMonths} fee record{durationMonths > 1 ? 's' : ''} will be created automatically</div>
+                  {/* Step 2 — Locker preference (only for Full Day) */}
+                  {selectedSlot && (
+                    <div style={{ display: 'flex', gap: 10 }}>
+                      {[false, true].map(wl => (
+                        <div
+                          key={String(wl)}
+                          onClick={() => setWantLocker(wl)}
+                          style={{
+                            flex: 1, padding: '12px 16px', borderRadius: 6, cursor: 'pointer', textAlign: 'center',
+                            border: `2px solid ${wantLocker === wl ? '#00236f' : '#e3e1e9'}`,
+                            background: wantLocker === wl ? '#f0f4ff' : 'white',
+                          }}
+                        >
+                          <div style={{ fontSize: 20, marginBottom: 4 }}>{wl ? '🔒' : '💺'}</div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: '#00236f' }}>{wl ? 'With Locker' : 'Normal Seat'}</div>
+                          <div style={{ fontSize: 11, color: '#757682' }}>{wl ? 'Seats 9–27' : 'Seats 1–8, 28–96'}</div>
+                        </div>
+                      ))}
                     </div>
                   )}
+
+                  {/* Step 3 — Duration (only for Full Day) */}
+                  {selectedSlot && isFullDay && (
+                    <Field label="Plan Duration" required>
+                      <div style={{ display: 'flex', gap: 10 }}>
+                        {[['1', '1 Month'], ['3', '3 Months']].map(([val, label]) => (
+                          <div
+                            key={val}
+                            onClick={() => setDurationMonths(val)}
+                            style={{
+                              flex: 1, padding: '12px', borderRadius: 6, cursor: 'pointer', textAlign: 'center',
+                              border: `2px solid ${durationMonths === val ? '#00236f' : '#e3e1e9'}`,
+                              background: durationMonths === val ? '#f0f4ff' : 'white',
+                            }}
+                          >
+                            <div style={{ fontSize: 15, fontWeight: 700, color: '#00236f' }}>{label}</div>
+                            <div style={{ fontSize: 11, color: '#757682' }}>
+                              ₹{(parseFloat(selectedSlotObj?.monthly_fee || 0) * parseInt(val)).toLocaleString('en-IN')} total
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </Field>
+                  )}
+
+                  {/* Shift: always 1 month, show info */}
+                  {selectedSlot && isShift && (
+                    <div style={{ padding: '10px 14px', background: '#f0f4ff', borderRadius: 4, fontSize: 13, color: '#00236f', border: '1px solid #dce1ff' }}>
+                      📅 Shift plans are always <strong>1 month</strong> — ₹{parseFloat(selectedSlotObj?.monthly_fee || 0).toLocaleString('en-IN')}
+                    </div>
+                  )}
+
+                  {/* Start Date */}
+                  {selectedSlot && (
+                    <Field label="Start Date" required>
+                      <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} required={assignSeat} style={inputStyle} />
+                    </Field>
+                  )}
+
+                  {/* Auto-seat preview */}
+                  {selectedSlot && (
+                    <div style={{
+                      padding: '12px 16px', borderRadius: 6,
+                      background: autoSeat ? '#adedd3' : '#ffdad6',
+                      border: `1px solid ${autoSeat ? '#2b6954' : '#ba1a1a'}`,
+                      fontSize: 13
+                    }}>
+                      {autoSeat ? (
+                        <div>
+                          <div style={{ fontWeight: 700, color: '#2b6954' }}>
+                            ✅ Seat {autoSeat.seat_number} will be assigned
+                            {autoSeat.has_locker ? ' 🔒 (with locker)' : ''}
+                          </div>
+                          <div style={{ fontSize: 11, color: '#306d58', marginTop: 2 }}>
+                            {autoSeat.zone} · {seats.filter(s => wantLocker ? s.has_locker : !s.has_locker).length} seats available
+                          </div>
+                        </div>
+                      ) : (
+                        <div style={{ color: '#ba1a1a', fontWeight: 700 }}>
+                          ❌ No {wantLocker ? 'locker' : 'normal'} seats available for this slot
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                 </div>
               ) : (
                 <div style={{ padding: 16, background: '#f4f3fa', borderRadius: 4, fontSize: 13, color: '#757682', textAlign: 'center' }}>
