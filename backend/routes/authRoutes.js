@@ -60,4 +60,38 @@ router.put('/password', auth, asyncHandler(async (req, res) => {
   res.json({ success: true, message: 'Password updated' });
 }));
 
+// POST /api/v1/auth/student-login
+router.post('/student-login', asyncHandler(async (req, res) => {
+  const { student_login_id } = req.body;
+  if (!student_login_id)
+    return res.status(400).json({ success: false, message: 'Student ID required' });
+
+  const rows = await db.q(
+    'SELECT * FROM students WHERE student_login_id = ? AND status = ? AND deleted_at IS NULL',
+    [student_login_id.trim().toLowerCase(), 'active']
+  );
+  if (!rows.length)
+    return res.status(401).json({ success: false, message: 'Student ID not found or account inactive' });
+
+  const student = rows[0];
+  const token = jwt.sign(
+    { studentId: student.id, name: student.name, role: 'student' },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+  );
+
+  res.json({
+    success: true,
+    message: 'Login successful',
+    token,
+    student: {
+      id: student.id,
+      name: student.name,
+      phone: student.phone,
+      student_login_id: student.student_login_id,
+      role: 'student'
+    }
+  });
+}));
+
 module.exports = router;

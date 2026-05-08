@@ -148,6 +148,11 @@ export default function EditStudent() {
             {/* Student info */}
             <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1b21', marginBottom: 2 }}>{student.name}</div>
             <div style={{ fontSize: 12, color: '#757682', marginBottom: 4 }}>{student.phone}</div>
+            {student.student_login_id && (
+              <div style={{ fontSize: 12, fontFamily: 'monospace', color: '#00236f', fontWeight: 700, marginBottom: 4 }}>
+                {student.student_login_id}
+              </div>
+            )}
             {student.seat_number && (
               <div style={{ fontSize: 12, color: '#00236f', fontWeight: 600, marginBottom: 4 }}>
                 Seat {student.seat_number}

@@ -32,6 +32,7 @@ app.use((req, _res, next) => { req.io = io; next(); });
 // Routes
 app.use('/api/v1/auth',          require('./routes/authRoutes'));
 app.use('/api/v1/students',      require('./routes/studentRoutes'));
+app.use('/api/v1/portal',        require('./routes/studentPortalRoutes'));
 app.use('/api/v1/slots',         require('./routes/slotRoutes'));
 app.use('/api/v1/seats',         require('./routes/seatRoutes'));
 app.use('/api/v1/checkins',      require('./routes/checkinRoutes'));

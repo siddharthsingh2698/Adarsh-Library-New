@@ -16,15 +16,17 @@ import Reports from './pages/Reports';
 import Configuration from './pages/Configuration';
 import Kiosk from './pages/Kiosk';
 import LibraryPage from './pages/LibraryPage';
+import StudentPortal from './pages/StudentPortal';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/kiosk" element={<Kiosk />} />
-          <Route path="/library" element={<LibraryPage />} />
+          <Route path="/login"          element={<Login />} />
+          <Route path="/kiosk"          element={<Kiosk />} />
+          <Route path="/library"        element={<LibraryPage />} />
+          <Route path="/student-portal" element={<StudentPortal />} />
           <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard"      element={<Dashboard />} />

@@ -102,15 +102,28 @@ router.post('/', auth, asyncHandler(async (req, res) => {
   const idRow = await db.q('SELECT UUID() AS id');
   const id = idRow[0].id;
 
+  // Generate student login ID: alms@firstname_XXXX
+  const firstName = name.trim().split(' ')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
+  // Find next available 4-digit suffix for this first name
+  const existing = await db.q(
+    "SELECT student_login_id FROM students WHERE student_login_id LIKE ? AND deleted_at IS NULL",
+    [`alms@${firstName}_%`]
+  );
+  let suffix = 1001;
+  if (existing.length) {
+    const usedNums = existing.map(r => parseInt(r.student_login_id.split('_').pop())).filter(n => !isNaN(n));
+    suffix = usedNums.length ? Math.max(...usedNums) + 1 : 1001;
+  }
+  const studentLoginId = `alms@${firstName}_${suffix}`;
+
   await db.q(
-    `INSERT INTO students (id, name, phone, email, address, joined_at, photo_url, id_proof_url, notification_channel, qr_code)
-     VALUES (?,?,?,?,?,?,?,?,?,?)`,
+    `INSERT INTO students (id, name, phone, email, address, joined_at, photo_url, id_proof_url, notification_channel, qr_code, student_login_id)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
     [id, name, phone, email||null, address||null, joined_at||new Date().toISOString().slice(0,10),
-     photo_url||null, id_proof_url||null, notification_channel||'email', `ALMS-${id}`]
+     photo_url||null, id_proof_url||null, notification_channel||'email', `ALMS-${id}`, studentLoginId]
   );
 
-  const student = (await db.q('SELECT * FROM students WHERE id = ?', [id]))[0];
-  res.status(201).json({ success: true, message: 'Student created', data: student });
+  res.status(201).json({ success: true, message: 'Student created', data: { ...student, student_login_id: studentLoginId } });
 }));
 
 // PUT /api/v1/students/:id
