@@ -224,20 +224,21 @@ async function init() {
       console.log('✅ Time slots seeded');
     }
 
-    // ── Seed seats (6 rows × 10 cols) ────────────────────────────────────
+    // ── Seed seats (8 rows × 12 cols = 96 seats numbered 1-96) ──────────
     const [existSeats] = await conn.query('SELECT id FROM seats LIMIT 1');
     if (!existSeats.length) {
-      const letters = 'ABCDEF';
-      for (let r = 0; r < 6; r++) {
-        for (let c = 1; c <= 10; c++) {
-          const [[{ uuid }]] = await conn.query('SELECT UUID() AS uuid');
-          await conn.query(
-            'INSERT INTO seats (id, seat_number, row_num, col_num, zone, has_power) VALUES (?,?,?,?,?,?)',
-            [uuid, `${letters[r]}${c}`, r+1, c, c <= 5 ? 'Zone A' : 'Zone B', c % 3 === 0 ? 1 : 0]
-          );
-        }
+      for (let i = 1; i <= 96; i++) {
+        const [[{ uuid }]] = await conn.query('SELECT UUID() AS uuid');
+        const row = Math.ceil(i / 12);
+        const col = ((i - 1) % 12) + 1;
+        const zone = i <= 48 ? 'Zone A' : 'Zone B';
+        const hasLocker = (i >= 9 && i <= 27) ? 1 : 0;
+        await conn.query(
+          'INSERT INTO seats (id, seat_number, row_num, col_num, zone, has_power, has_locker) VALUES (?,?,?,?,?,?,?)',
+          [uuid, String(i), row, col, zone, i % 4 === 0 ? 1 : 0, hasLocker]
+        );
       }
-      console.log('✅ 60 seats seeded');
+      console.log('✅ 96 seats seeded (1-96)');
     }
 
     // ── Seed lockers ─────────────────────────────────────────────────────
