@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1';
@@ -6,12 +6,9 @@ const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1';
 export default function Kiosk() {
   const [status, setStatus]     = useState('idle');
   const [result, setResult]     = useState(null);
-  const [manualId, setManualId] = useState('');
-  const [scanning, setScanning] = useState(false);
-  const scannerRef = useRef(null);
-  const didStart   = useRef(false);
+  const [uid, setUid]           = useState('');
 
-  // Auto-reset after 5 seconds on success/error
+  // Auto-reset after 5 seconds
   useEffect(() => {
     if (status === 'success' || status === 'error' || status === 'checkout') {
       const t = setTimeout(() => { setStatus('idle'); setResult(null); }, 5000);
@@ -19,72 +16,19 @@ export default function Kiosk() {
     }
   }, [status]);
 
-  // Start scanner AFTER the div#qr-reader is in the DOM
-  useEffect(() => {
-    if (!scanning || didStart.current) return;
-    if (!window.Html5Qrcode) {
-      setScanning(false);
-      alert('QR scanner not loaded. Use manual entry.');
-      return;
-    }
-
-    didStart.current = true;
-    const scanner = new window.Html5Qrcode('qr-reader');
-    scannerRef.current = scanner;
-
-    scanner.start(
-      { facingMode: 'environment' },
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      (decodedText) => {
-        scanner.stop().catch(() => {});
-        scannerRef.current = null;
-        didStart.current = false;
-        setScanning(false);
-        handleQrResult(decodedText);
-      },
-      () => {}
-    ).catch(() => {
-      didStart.current = false;
-      setScanning(false);
-      alert('Camera not available. Use manual entry below.');
-    });
-
-    return () => {
-      if (scannerRef.current) {
-        scannerRef.current.stop().catch(() => {});
-        scannerRef.current = null;
-      }
-      didStart.current = false;
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scanning]);
-
-  const handleQrResult = async (qrCode) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!uid.trim()) return;
     setStatus('processing');
     try {
-      const { data } = await axios.post(`${API}/checkins/qr`, { qr_code: qrCode });
+      const { data } = await axios.post(`${API}/checkins/qr`, { qr_code: uid.trim() });
       setResult(data);
       setStatus(data.action === 'checkout' ? 'checkout' : 'success');
     } catch (err) {
       setResult({ message: err.response?.data?.message || 'Check-in failed' });
       setStatus('error');
     }
-  };
-
-  const stopCamera = () => {
-    if (scannerRef.current) {
-      scannerRef.current.stop().catch(() => {});
-      scannerRef.current = null;
-    }
-    didStart.current = false;
-    setScanning(false);
-  };
-
-  const handleManual = (e) => {
-    e.preventDefault();
-    if (!manualId.trim()) return;
-    handleQrResult(manualId.trim());
-    setManualId('');
+    setUid('');
   };
 
   return (
@@ -101,7 +45,7 @@ export default function Kiosk() {
         <h1 style={{ fontFamily: 'Newsreader, serif', fontSize: 32, fontWeight: 700, color: '#00236f', margin: 0 }}>
           Adarsh Library
         </h1>
-        <p style={{ color: '#757682', fontSize: 14, marginTop: 6 }}>Student Check-In Kiosk</p>
+        <p style={{ color: '#757682', fontSize: 14, marginTop: 6 }}>Student Check-In / Check-Out</p>
       </div>
 
       {/* Success */}
@@ -158,65 +102,44 @@ export default function Kiosk() {
         </div>
       )}
 
-      {/* Idle — show scanner + manual entry */}
+      {/* ID Entry */}
       {status === 'idle' && (
         <div style={{ width: '100%', maxWidth: 400 }}>
-
-          {/* Camera scanner */}
-          <div style={{ background: 'white', border: '1px solid #e3e1e9', borderRadius: 8, padding: 24, marginBottom: 16, textAlign: 'center' }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#757682', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 16 }}>
-              Scan QR Code
+          <div style={{ background: 'white', border: '1px solid #e3e1e9', borderRadius: 8, padding: 32 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#757682', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 20, textAlign: 'center' }}>
+              Enter Your Student ID
             </div>
-
-            {/* qr-reader div always rendered when scanning=true so html5-qrcode can find it */}
-            {scanning && (
-              <div>
-                <div id="qr-reader" style={{ width: '100%', borderRadius: 4, overflow: 'hidden' }} />
-                <button
-                  onClick={stopCamera}
-                  style={{ marginTop: 12, padding: '8px 20px', background: 'none', border: '1px solid #e3e1e9', borderRadius: 4, cursor: 'pointer', fontSize: 13, color: '#757682' }}
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
-
-            {!scanning && (
-              <button
-                onClick={() => { didStart.current = false; setScanning(true); }}
-                style={{
-                  width: '100%', padding: '16px', background: '#00236f', color: 'white',
-                  border: 'none', borderRadius: 6, cursor: 'pointer', fontSize: 16, fontWeight: 700,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10
-                }}
-              >
-                <span className="material-symbols-outlined" style={{ fontSize: 24 }}>qr_code_scanner</span>
-                Open Camera &amp; Scan
-              </button>
-            )}
-          </div>
-
-          {/* Manual entry */}
-          <div style={{ background: 'white', border: '1px solid #e3e1e9', borderRadius: 8, padding: 24 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#757682', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12 }}>
-              Or Enter Student ID Manually
-            </div>
-            <form onSubmit={handleManual} style={{ display: 'flex', gap: 8 }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <input
-                value={manualId}
-                onChange={e => setManualId(e.target.value)}
+                value={uid}
+                onChange={e => setUid(e.target.value)}
                 placeholder="ALMS-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-                style={{ flex: 1, padding: '10px 12px', border: '1px solid #e3e1e9', borderRadius: 4, fontSize: 12, outline: 'none', fontFamily: 'monospace' }}
+                autoFocus
+                style={{
+                  width: '100%', padding: '14px 16px',
+                  border: '2px solid #e3e1e9', borderRadius: 6,
+                  fontSize: 13, fontFamily: 'monospace', outline: 'none',
+                  textAlign: 'center', letterSpacing: '0.02em',
+                  boxSizing: 'border-box'
+                }}
+                onFocus={e => e.target.style.borderColor = '#00236f'}
+                onBlur={e => e.target.style.borderColor = '#e3e1e9'}
               />
               <button
                 type="submit"
-                style={{ padding: '10px 16px', background: '#00236f', color: 'white', border: 'none', borderRadius: 4, cursor: 'pointer', fontWeight: 700, fontSize: 13 }}
+                style={{
+                  width: '100%', padding: '14px',
+                  background: '#00236f', color: 'white',
+                  border: 'none', borderRadius: 6,
+                  cursor: 'pointer', fontWeight: 700, fontSize: 16,
+                  fontFamily: 'Newsreader, serif'
+                }}
               >
-                Check In
+                Check In / Check Out
               </button>
             </form>
-            <p style={{ fontSize: 11, color: '#c5c5d3', marginTop: 8 }}>
-              Find your full ID on your printed library card
+            <p style={{ fontSize: 11, color: '#c5c5d3', marginTop: 16, textAlign: 'center' }}>
+              Your ID is printed on your library card
             </p>
           </div>
         </div>
