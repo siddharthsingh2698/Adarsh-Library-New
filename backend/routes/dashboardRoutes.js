@@ -12,9 +12,12 @@ router.get('/', auth, asyncHandler(async (req, res) => {
             (SELECT COUNT(*) FROM seats WHERE status != 'maintenance') AS total_seats
           FROM checkins WHERE check_out_at IS NULL`),
     db.q(`SELECT
-            COUNT(DISTINCT student_id) AS students_with_dues,
-            COALESCE(SUM(amount),0)    AS total_due
-          FROM fees WHERE status IN ('pending','overdue') AND deleted_at IS NULL`),
+            COUNT(DISTINCT f.student_id) AS students_with_dues,
+            COALESCE(SUM(f.amount),0)    AS total_due
+          FROM fees f
+          JOIN students s ON s.id = f.student_id
+          WHERE f.status IN ('pending','overdue') AND f.deleted_at IS NULL
+            AND s.status = 'active' AND s.deleted_at IS NULL`),
     db.q(`SELECT
             COUNT(*) AS total,
             SUM(status = 'active') AS active
