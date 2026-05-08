@@ -160,6 +160,10 @@ router.delete('/:id', auth, asyncHandler(async (req, res) => {
 
   await db.q('UPDATE seat_allotments SET is_active = 0 WHERE student_id = ?', [req.params.id]);
   await db.q('UPDATE locker_allotments SET is_active = 0 WHERE student_id = ?', [req.params.id]);
+  // Auto-checkout if currently checked in
+  await db.q('UPDATE checkins SET check_out_at = NOW() WHERE student_id = ? AND check_out_at IS NULL', [req.params.id]);
+  // Cancel pending fees
+  await db.q("UPDATE fees SET status = 'waived', notes = 'Auto-cancelled on deactivation' WHERE student_id = ? AND status IN ('pending','overdue') AND deleted_at IS NULL", [req.params.id]);
 
   res.json({ success: true, message: 'Student deactivated' });
 }));

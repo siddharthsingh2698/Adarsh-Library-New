@@ -50,6 +50,7 @@ router.get('/outstanding', auth, asyncHandler(async (req, res) => {
      FROM fees f
      JOIN students s ON s.id = f.student_id
      WHERE f.status IN ('pending','overdue') AND f.deleted_at IS NULL
+       AND s.status = 'active' AND s.deleted_at IS NULL
      GROUP BY s.id, s.name, s.phone, s.email
      ORDER BY oldest_due ASC`
   );
