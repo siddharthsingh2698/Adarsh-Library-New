@@ -60,8 +60,23 @@ router.put('/password', auth, asyncHandler(async (req, res) => {
   res.json({ success: true, message: 'Password updated' });
 }));
 
-// POST /api/v1/auth/student-login
-router.post('/student-login', asyncHandler(async (req, res) => {
+// POST /api/v1/auth/kiosk-login — kiosk PIN auth
+router.post('/kiosk-login', asyncHandler(async (req, res) => {
+  const { pin } = req.body;
+  const correctPin = process.env.KIOSK_PIN || '1234';
+  if (!pin) return res.status(400).json({ success: false, message: 'PIN required' });
+  if (pin !== correctPin) return res.status(401).json({ success: false, message: 'Incorrect PIN' });
+
+  const token = jwt.sign(
+    { role: 'kiosk' },
+    process.env.JWT_SECRET,
+    { expiresIn: '30d' }  // long-lived so kiosk stays logged in
+  );
+
+  res.json({ success: true, token, message: 'Kiosk authenticated' });
+}));
+
+module.exports = router;
   const { student_login_id } = req.body;
   if (!student_login_id)
     return res.status(400).json({ success: false, message: 'Student ID required' });

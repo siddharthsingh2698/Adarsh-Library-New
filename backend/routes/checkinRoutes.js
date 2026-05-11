@@ -127,13 +127,13 @@ router.post('/qr', asyncHandler(async (req, res) => {
 
   const input = qr_code.trim();
 
-  // Find student — accept full QR, raw UUID, or short display ID
+  // Find student — accept: full QR, raw UUID, short display ID, OR phone number
   let students = await db.q(
     `SELECT * FROM students
-     WHERE (qr_code = ? OR qr_code = ? OR id = ?)
+     WHERE (qr_code = ? OR qr_code = ? OR id = ? OR phone = ?)
        AND status = 'active' AND deleted_at IS NULL
      LIMIT 1`,
-    [input, 'ALMS-' + input, input]
+    [input, 'ALMS-' + input, input, input]
   );
 
   let student = students[0];
